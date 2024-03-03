@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+import { Suspense, lazy } from "react";
+import Login from "./modules/core/pages/Login";
+import NotFound from "./modules/core/pages/NotFound";
+import CoreLayout from "./modules/core/components/layoutComponents/CoreLayout";
+const ProjectsModule = lazy(() => import("./modules/projects/module"));
 
+const Loading = () => <>Loading...</>;
+const LoadModule = ({ module }: { module: JSX.Element }) => (
+  <Suspense fallback={<Loading />}>{module}</Suspense>
+);
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <CoreLayout>
+        <Routes>
+          <Route path="/*" element={<Navigate to={"notFound"} />} />
+          <Route path="/notFound" element={<NotFound />} />
+          <Route path="/" element={<Navigate to={"/advisors/projects"} />} />
+          <Route
+            path="/advisors"
+            element={<Navigate to={"/advisors/projects"} />}
+          />
+          <Route
+            path="/advisors/projects/*"
+            element={<LoadModule module={<ProjectsModule />} />}
+          />
+          <Route path="/advisors/login" element={<Login />} />
+        </Routes>
+      </CoreLayout>
     </div>
   );
 }
