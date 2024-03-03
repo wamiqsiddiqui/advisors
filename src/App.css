@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+.adv__icon {
+  @apply p-2 h-9 w-9 text-blue-950;
+}
+
+.adv__custom-scrollbar::-webkit-scrollbar-track {
+  background: #313644;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #acacac;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 .App {
   text-align: center;
 }
