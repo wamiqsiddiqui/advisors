@@ -2,8 +2,10 @@ import CustomButton from "./CustomButton";
 import InputField from "./InputField";
 import logoBlue from "../../../assets/images/logoBlue.png";
 import logoWhiteIconOnly from "../../../assets/images/logoIconOnly.png";
+import { useNavigate } from "react-router-dom";
 
 const LeftPanel = () => {
+  const navigate = useNavigate();
   return (
     <div className="relative pb-20 pt-28 pl-10 flex-1 h-full bg-[#fff] flex flex-col justify-start items-start">
       <div className="absolute opacity-[0.04] -left-10 -bottom-20 h-[1000px] w-[700px]">
@@ -30,7 +32,10 @@ const LeftPanel = () => {
               Forgot Password?
             </p>
           </div>
-          <CustomButton text="Login" />
+          <CustomButton
+            text="Login"
+            onClick={() => navigate("/advisors/projects")}
+          />
           <div className="flex items-center my-6 w-full">
             <div className="w-[50%] h-[1px] bg-grayShades-gray"></div>
             <p className="mx-2 text-xl font-light">OR</p>

@@ -25,11 +25,14 @@ module.exports = {
         primary: {
           darkBlue: "#154073",
           lightBlue: "#25A4DC",
+          bgBlack: "#272934",
+          bgGray: "#505268",
         },
         grayShades: {
           newgray: "#6B7280",
           gray: "#9CA3AF",
           lightGray: "#4B5563",
+          iconGray: "#9C9EAF",
         },
       },
     },
