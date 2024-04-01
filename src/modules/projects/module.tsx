@@ -10,7 +10,8 @@ const Projects = () => {
         <Routes>
           <Route path="/*" element={<Navigate to={"/notFound"} />} />
           <Route index element={<Dashboard />} />
-          <Route path="/categories" element={<Categories />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="categories" element={<Categories />} />
         </Routes>
       </Layout>
     </div>

@@ -6,8 +6,8 @@ type DataGridProps = {
 };
 const DataGrid = ({ columns, rows }: DataGridProps) => {
   return (
-    <div className="w-full px-6 bg-[#272934] overflow-x-auto">
-      <table className="w-full my-10">
+    <div className="w-full px-6 bg-[#272934] overflow-x-auto adv__custom-scrollbar">
+      <table className="w-full mb-10 mt-4">
         <thead>
           <tr className="">
             {columns.map((column, index) => (
@@ -37,6 +37,25 @@ const DataGrid = ({ columns, rows }: DataGridProps) => {
                   >
                     <div className="flex justify-center">{rowData.icon}</div>
                   </td>
+                ) : Object.keys(row)[cellIndex] === "select" ? (
+                  <td
+                    className={`${cellIndex === 0 && "rounded-l-2xl"} ${
+                      cellIndex == Object.values(row).length - 1 &&
+                      " rounded-r-2xl"
+                    }`}
+                  >
+                    <div className="flex justify-center">
+                      {rowData.isLoading ? (
+                        <>Loading...</>
+                      ) : (
+                        <input
+                          type="checkbox"
+                          onChange={rowData.onChange}
+                          defaultChecked={rowData.isChecked}
+                        />
+                      )}
+                    </div>
+                  </td>
                 ) : (
                   <td
                     className={`${cellIndex === 0 && "rounded-l-2xl"} ${
@@ -45,7 +64,8 @@ const DataGrid = ({ columns, rows }: DataGridProps) => {
                     } py-2`}
                   >
                     <p className="overflow-ellipsis">
-                      {(rowData as string).length > 90
+                      {typeof rowData === "string" &&
+                      (rowData as string).length > 90
                         ? (rowData as string).substring(0, 91) + "..."
                         : rowData}
                     </p>

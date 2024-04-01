@@ -10,17 +10,18 @@
 }
 
 .adv__custom-scrollbar::-webkit-scrollbar-track {
-  background: #313644;
+  background: #505268;
 }
 
 /* width */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #272934;
 }
 
 /* Handle */

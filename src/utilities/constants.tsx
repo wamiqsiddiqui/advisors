@@ -16,27 +16,27 @@ import {
 export const sidebarItems: SidebarItemType[] = [
   {
     name: "Dashboard",
-    link: "/dashboard",
+    link: "dashboard",
     icon: <FaTachometerAlt className="adv__icon" />,
   },
   {
     name: "Sales Report",
-    link: "/salesreport",
+    link: "salesreport",
     icon: <FaFile className="adv__icon" />,
   },
   {
-    name: "Delivery Zone",
-    link: "/deliveryzone",
+    name: "Cli",
+    link: "deliveryzone",
     icon: <FaMapMarkerAlt className="adv__icon" />,
   },
   {
-    name: "Category",
-    link: "/category",
+    name: "Client Listing",
+    link: "categories",
     icon: <FaTags className="adv__icon" />,
   },
   {
     name: "Customers",
-    link: "/customers",
+    link: "customers",
     icon: <FaUsers className="adv__icon" />,
   },
   {
@@ -46,22 +46,22 @@ export const sidebarItems: SidebarItemType[] = [
   },
   {
     name: "Rider",
-    link: "/rider",
+    link: "rider",
     icon: <FaBicycle className="adv__icon" />,
   },
   {
     name: "Order",
-    link: "/order",
+    link: "order",
     icon: <FaShoppingCart className="adv__icon" />,
   },
   {
     name: "Bottlers",
-    link: "/bottlers",
+    link: "bottlers",
     icon: <TiDropbox className="adv__icon" />,
   },
   {
     name: "Promotions",
-    link: "/promotions",
+    link: "promotions",
     icon: <TiDropbox className="adv__icon" />,
   },
   {
@@ -76,7 +76,7 @@ export const sidebarItems: SidebarItemType[] = [
   },
   {
     name: "Feedback",
-    link: "/feedback",
+    link: "feedback",
     icon: <FaGift className="adv__icon" />,
   },
   {
