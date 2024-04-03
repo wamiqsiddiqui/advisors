@@ -30,11 +30,22 @@ import {
   TiPencil,
   TiTrash,
 } from "react-icons/ti";
-import { PiWarningCircleLight, PiWarningDiamondFill } from "react-icons/pi";
+import {
+  PiWarningCircleLight,
+  PiWarningDiamondFill,
+  PiSignOutBold,
+} from "react-icons/pi";
 import { CiSearch } from "react-icons/ci";
 import { HiMenuAlt4 } from "react-icons/hi";
+import { IoEye } from "react-icons/io5";
+import { IoMdEyeOff } from "react-icons/io";
+import { GoSignOut } from "react-icons/go";
 
 export {
+  PiSignOutBold,
+  GoSignOut,
+  IoEye,
+  IoMdEyeOff,
   FaTachometerAlt,
   FaFile,
   FaMapMarkerAlt,

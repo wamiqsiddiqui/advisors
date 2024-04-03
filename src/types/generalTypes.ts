@@ -5,3 +5,8 @@ export type SidebarItemType = {
 };
 
 export type SidebarStateType = "open" | "iconsOnly" | "closed";
+
+export type ColumnTypes = {
+  name: string;
+  minWidth: string;
+};

@@ -1,0 +1,57 @@
+import { FaUnlock } from "../../../../utilities/icons";
+import { mockStocksData } from "../../../../utilities/mockData";
+import BarsDataset from "../../../core/components/BarChart";
+import BasicBars from "../../../core/components/Charts/BarChart2";
+import BasicArea from "../../../core/components/Charts/LineChart";
+import PieActiveArc from "../../../core/components/Charts/PieCharts";
+import DataGrid from "../../../core/components/DataGrid";
+
+const DashboardLayout = () => {
+  return (
+    <div className="flex flex-col p-6">
+      <p className="text-5xl font-thin text-start mb-4">Dashboard</p>
+      <div className="md:grid gap-3 md:grid-cols-3 max-md:flex max-md:flex-col">
+        <div className="h-40 md:flex-1 rounded-xl bg-primary-bgBlack">
+          <div className="h-full flex items-center ">
+            <PieActiveArc />
+          </div>
+        </div>
+        <div className="h-40 md:flex-1 rounded-xl bg-primary-bgBlack">
+          <div className="h-full flex items-center ">
+            <BasicArea />
+          </div>
+        </div>
+        <div className="h-40 md:flex-1 rounded-xl bg-primary-bgBlack">
+          <div className="h-full flex items-center ">
+            <BasicBars />
+          </div>
+        </div>
+        <div className="h-96 flex flex-col rounded-xl p-1 bg-primary-bgBlack">
+          <p className="text-xl font-thin">Last Financial Data</p>
+          <DataGrid
+            columns={[
+              { name: "Company", minWidth: "10%" },
+              { name: "Symbol", minWidth: "10%" },
+              { name: "Status", minWidth: "10%" },
+              { name: "Action", minWidth: "10%" },
+            ]}
+            rows={mockStocksData.map((data) => {
+              return {
+                company: data.company,
+                symbol: data.symbol,
+                status: data.status,
+                actions: { icon: <FaUnlock className="adv__icon" /> },
+              };
+            })}
+          />
+        </div>
+
+        <div className="h-96 md:flex-1 md:col-span-2 rounded-xl bg-primary-bgBlack">
+          <BarsDataset />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DashboardLayout;

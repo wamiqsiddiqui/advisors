@@ -25,7 +25,9 @@ const Layout = ({ children }: LayoutProps) => {
             setSidebarState(sidebarState === "open" ? "iconsOnly" : "open");
           }}
         />
-        {children}
+        <div className="min-h-[calc(100vh-64px)] bg-primary-bgGray text-white">
+          {children}
+        </div>
       </div>
     </div>
   );
