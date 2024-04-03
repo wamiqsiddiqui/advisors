@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  getCalculatedAssumptions,
   useGetCalculatedAssumptions,
   useGetFinances,
 } from "../../../../services/finances";
@@ -24,16 +25,45 @@ const CategoriesLayout = () => {
     { name: "2027", minWidth: "10%" },
     { name: "Base", minWidth: "10%" },
   ];
+  const calculatedAssumptionsColumns: ColumnTypes[] = [
+    { name: "Year", minWidth: "10%" },
+    { name: "Revenue", minWidth: "10%" },
+    { name: "Cost of revenues", minWidth: "10%" },
+    { name: "Gross profit", minWidth: "10%" },
+    { name: "Operating expenses", minWidth: "10%" },
+    { name: "Selling and marketing expenses", minWidth: "10%" },
+    { name: "General and administrative expenses", minWidth: "10%" },
+    { name: "Profit from operations", minWidth: "10%" },
+    { name: "Other income/(expense)", minWidth: "10%" },
+    {
+      name: "Share of income from equity accounted investment",
+      minWidth: "10%",
+    },
+    { name: "Fair value loss on investments", minWidth: "10%" },
+    { name: "Dividends", minWidth: "10%" },
+    { name: "Other expenses", minWidth: "10%" },
+    { name: "Other income", minWidth: "10%" },
+    { name: "Finance cost", minWidth: "10%" },
+    { name: "Profit / loss before zakat", minWidth: "10%" },
+    { name: "Zakat", minWidth: "10%" },
+    { name: "Net loss for the year", minWidth: "10%" },
+    {
+      name: "Re-measurements of employee termination benefits",
+      minWidth: "10%",
+    },
+    { name: "Other comprehensive income", minWidth: "10%" },
+    { name: "Total comprehensive loss for the year", minWidth: "10%" },
+  ];
   const { data: assumptionData, isLoading } = useGetFinances();
   const [selectedAssumption, setSelectedAssumption] = useState<
     AssumptionDataType | undefined
   >();
   const {
+    mutate: mutateAssumptions,
+    isPending: isCalculatedAssumptionsLoading,
     data: calculatedAssumptionsData,
-    isLoading: isCalculatedAssumptionsLoading,
-  } = useGetCalculatedAssumptions(selectedAssumption);
+  } = useGetCalculatedAssumptions();
   const [checked, setChecked] = useState<boolean[]>([]);
-  console.log("calculatedAssumptionsData = ", calculatedAssumptionsData?.data);
   useEffect(() => {
     if (
       assumptionData?.data &&
@@ -60,7 +90,7 @@ const CategoriesLayout = () => {
                     selectedAssumption["COMPONENT "] === data["COMPONENT "]
                       ? isCalculatedAssumptionsLoading
                       : false,
-                  onChange: () => {
+                  onChange: async () => {
                     const previousVal = checked[index];
                     let newChecked = Array(
                       assumptionData?.data.length ?? 0
@@ -68,7 +98,26 @@ const CategoriesLayout = () => {
                     newChecked[index] = !previousVal;
                     console.log("c = ", newChecked);
                     setChecked(newChecked);
-                    setSelectedAssumption(data);
+                    // setSelectedAssumption(data);
+                    mutateAssumptions(
+                      assumptionData.data.map((data) => {
+                        return {
+                          "COMPONENT ": data["COMPONENT "],
+                          BASE: data.BASE,
+                          Select: data.Select,
+                          "2018": data[2018],
+                          "2019": data[2019],
+                          "2020": data[2020],
+                          "2021": data[2021],
+                          "2022": data[2022],
+                          "2023": data[2023],
+                          "2024": data[2024],
+                          "2025": data[2025],
+                          "2026": data[2026],
+                          "2027": data[2027],
+                        };
+                      })
+                    );
                   },
                 },
                 key3: data[2018],
@@ -86,7 +135,50 @@ const CategoriesLayout = () => {
             })}
           />
         ) : (
-          <></>
+          <>No Record Found!</>
+        )}
+        {isCalculatedAssumptionsLoading ? (
+          <LoadingDataGrid columns={columns} />
+        ) : calculatedAssumptionsData &&
+          calculatedAssumptionsData.data.length > 0 ? (
+          <DataGrid
+            columns={calculatedAssumptionsColumns}
+            rows={calculatedAssumptionsData.data.map((data) => {
+              return {
+                year: data.year,
+                revenue: data.revenue,
+                "cost of revenues": data["cost of revenues"],
+                "gross profit": data["gross profit"],
+                "operating expenses": data["operating expenses"],
+                "selling and marketing expenses":
+                  data["selling and marketing expenses"],
+                "general and administrative expenses":
+                  data["general and administrative expenses"],
+                "profit from operations": data["profit from operations"],
+                "other income/(expense)": data["other income/(expense)"],
+                "share of income from equity accounted investment":
+                  data["share of income from equity accounted investment"],
+                "fair value loss on investments":
+                  data["fair value loss on investments"],
+                dividends: data.dividends,
+                "other expenses": data["other expenses"],
+                "other income": data["other income"],
+                "finance cost": data["finance cost"],
+                "profit / loss before zakat":
+                  data["profit / loss before zakat"],
+                zakat: data.zakat,
+                "net loss for the year": data["net loss for the year"],
+                "re-measurements of employee termination benefits":
+                  data["re-measurements of employee termination benefits"],
+                "other comprehensive income":
+                  data["other comprehensive income"],
+                "total comprehensive loss for the year":
+                  data["total comprehensive loss for the year"],
+              };
+            })}
+          />
+        ) : (
+          <>No Record Found!</>
         )}
       </div>
     </div>

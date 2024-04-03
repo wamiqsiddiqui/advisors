@@ -30,3 +30,12 @@ export const get = async <T>(url: string) => {
   });
   return getReturnResponse<T>(res);
 };
+
+export const post = async <T>(url: string, body: any) => {
+  const header = {
+    "Content-type": "application/json",
+    // Authorization: `Bearer ${token}`,
+  };
+  const res = await axios.post(getUrl(url), body, { headers: header });
+  return getReturnResponse<T>(res);
+};
