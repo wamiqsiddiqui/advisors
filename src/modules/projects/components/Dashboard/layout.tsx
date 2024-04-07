@@ -8,25 +8,28 @@ import DataGrid from "../../../core/components/DataGrid";
 
 const DashboardLayout = () => {
   return (
-    <div className="flex flex-col p-6">
-      <p className="text-5xl font-thin text-start mb-4">Dashboard</p>
+    <div className="flex flex-col px-6 pb-2">
+      <p className="text-5xl font-normal text-start mb-2">Dashboard</p>
+      <p className="text-base font-light text-start mb-4">
+        Visualize your Financial Statistics with ease and few clicks
+      </p>
       <div className="md:grid gap-3 md:grid-cols-3 max-md:flex max-md:flex-col">
-        <div className="h-40 md:flex-1 rounded-xl bg-primary-bgBlack">
+        <div className="h-40 md:flex-1 rounded-xl bg-neoShades-sidebarSelectedBlue">
           <div className="h-full flex items-center ">
             <PieActiveArc />
           </div>
         </div>
-        <div className="h-40 md:flex-1 rounded-xl bg-primary-bgBlack">
+        <div className="h-40 md:flex-1 rounded-xl bg-neoShades-dashboardPanel2">
           <div className="h-full flex items-center ">
             <BasicArea />
           </div>
         </div>
-        <div className="h-40 md:flex-1 rounded-xl bg-primary-bgBlack">
+        <div className="h-40 md:flex-1 rounded-xl bg-neoShades-dashboardPanel3">
           <div className="h-full flex items-center ">
             <BasicBars />
           </div>
         </div>
-        <div className="h-96 flex flex-col rounded-xl p-1 bg-primary-bgBlack">
+        <div className="h-96 flex flex-col rounded-xl p-1 bg-neoShades-innerComponentsGray">
           <p className="text-xl font-thin">Last Financial Data</p>
           <DataGrid
             columns={[
@@ -46,7 +49,7 @@ const DashboardLayout = () => {
           />
         </div>
 
-        <div className="h-96 md:flex-1 md:col-span-2 rounded-xl bg-primary-bgBlack">
+        <div className="h-96 md:flex-1 md:col-span-2 rounded-xl bg-neoShades-innerComponentsGray shadow-div">
           <BarsDataset />
         </div>
       </div>

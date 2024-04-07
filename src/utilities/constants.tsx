@@ -41,7 +41,7 @@ export const sidebarItems: SidebarItemType[] = [
   },
   {
     name: "Product",
-    link: "/",
+    link: "/product",
     icon: <TfiServer className="adv__icon" />,
   },
   {
@@ -67,11 +67,11 @@ export const sidebarItems: SidebarItemType[] = [
   {
     icon: <TfiServer className="adv__icon" />,
     name: "System",
-    link: "",
+    link: "system",
   },
   {
     name: "Message",
-    link: "",
+    link: "message",
     icon: <FaComment className="adv__icon" />,
   },
   {
@@ -81,7 +81,7 @@ export const sidebarItems: SidebarItemType[] = [
   },
   {
     name: "Coupon",
-    link: "",
+    link: "coupon",
     icon: <FaGift className="adv__icon" />,
   },
 ];

@@ -8,7 +8,7 @@ type HeaderProps = {
 const Header = ({ onMenuClick }: HeaderProps) => {
   const navigate = useNavigate();
   return (
-    <header className="sticky z-50 shadow-div right-0 top-0 bg-primary-bgBlack h-16">
+    <header className="sticky z-50 right-0 top-0 bg-neoShades-dashboardHeaderBgBlack h-16">
       {/* <div className="absolute opacity-15 rotate-180 -left-20 -top-7 h-[150%] w-[100%]">
         <img className="w-full h-full" src={logoWhiteIconOnly} />
       </div> */}

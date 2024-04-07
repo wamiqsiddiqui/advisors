@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/moduleLayoutComponents/Layout";
 import Dashboard from "./pages/Dashboard";
 import Categories from "./pages/Categories";
+import SalesReport from "./pages/SalesReport";
 
 const Projects = () => {
   return (
@@ -12,6 +13,7 @@ const Projects = () => {
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="categories" element={<Categories />} />
+          <Route path="salesreport" element={<SalesReport />} />
         </Routes>
       </Layout>
     </div>

@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       boxShadow: {
-        div: "0 0 2rem 0 rgba(136, 152, 170, 0.45)",
+        div: "0 0 2rem 0   rgba(56, 57, 76, 0.45)",
       },
       backgroundImage: {
         logoWhiteIconOnly: "url('/src/assets/images/logoIconOnly.png')",
@@ -27,6 +27,15 @@ module.exports = {
           lightBlue: "#25A4DC",
           bgBlack: "#272934",
           bgGray: "#505268",
+        },
+        neoShades: {
+          sidebarSelectedBlue: "#6c80F1",
+          dashboardPanel2: "#E0B2F0",
+          dashboardPanel3: "#82D7BA",
+          dashboardPanel4: "#00B5E4",
+          sidebarBlack: "#101113",
+          dashboardHeaderBgBlack: "#18191E",
+          innerComponentsGray: "#1A1B1D",
         },
         grayShades: {
           newgray: "#6B7280",

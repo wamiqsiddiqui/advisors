@@ -25,7 +25,7 @@ const Layout = ({ children }: LayoutProps) => {
             setSidebarState(sidebarState === "open" ? "iconsOnly" : "open");
           }}
         />
-        <div className="min-h-[calc(100vh-64px)] bg-primary-bgGray text-white">
+        <div className="min-h-[calc(100vh-64px)] bg-neoShades-dashboardHeaderBgBlack text-white">
           {children}
         </div>
       </div>

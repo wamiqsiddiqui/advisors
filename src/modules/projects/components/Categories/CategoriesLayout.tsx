@@ -54,7 +54,7 @@ const CategoriesLayout = () => {
     { name: "Other comprehensive income", minWidth: "10%" },
     { name: "Total comprehensive loss for the year", minWidth: "10%" },
   ];
-  const { data: assumptionData, isLoading } = useGetFinances();
+  const { data: assumptionData, isLoading, isError } = useGetFinances();
   const [selectedAssumption, setSelectedAssumption] = useState<
     AssumptionDataType | undefined
   >();
@@ -75,7 +75,9 @@ const CategoriesLayout = () => {
     <div className="flex flex-col p-6">
       <p className="text-5xl font-thin text-start mb-4">Categories</p>
       <div className=" rounded-xl p-1 bg-primary-bgBlack">
-        {isLoading ? (
+        {isError ? (
+          <>Something went wrong</>
+        ) : isLoading ? (
           <LoadingDataGrid columns={columns} />
         ) : assumptionData && assumptionData.data.length > 0 ? (
           <DataGrid
