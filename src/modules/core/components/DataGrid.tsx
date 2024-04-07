@@ -24,7 +24,9 @@ const DataGrid = ({ columns, rows }: DataGridProps) => {
           {rows.map((row, index) => (
             <tr
               className={`${
-                index % 2 === 0 ? "bg-[#373849] rounded-xl" : "bg-transparent"
+                index % 2 === 0
+                  ? "bg-grayShades-alternateGray rounded-xl"
+                  : "bg-transparent"
               }`}
             >
               {Object.values(row).map((rowData, cellIndex) => {

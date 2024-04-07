@@ -42,6 +42,7 @@ module.exports = {
           gray: "#9CA3AF",
           lightGray: "#4B5563",
           iconGray: "#9C9EAF",
+          alternateGray: "#373849",
         },
       },
     },
