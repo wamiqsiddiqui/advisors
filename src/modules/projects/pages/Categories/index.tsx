@@ -1,4 +1,4 @@
-import CategoriesLayout from "../../components/Categories/layout";
+import CategoriesLayout from "../../components/Categories/CategoriesLayout";
 
 const Categories = () => {
   return <CategoriesLayout />;
