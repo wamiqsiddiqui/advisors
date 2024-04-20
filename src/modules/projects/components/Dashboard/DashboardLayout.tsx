@@ -5,14 +5,14 @@ import BasicBars from "../../../core/components/Charts/BarChart2";
 import BasicArea from "../../../core/components/Charts/LineChart";
 import PieActiveArc from "../../../core/components/Charts/PieCharts";
 import DataGrid from "../../../core/components/DataGrid";
+import TitleBody from "../../../core/components/TitleBody";
 
 const DashboardLayout = () => {
   return (
-    <div className="flex flex-col px-6 pb-2">
-      <p className="text-5xl font-normal text-start mb-2">Dashboard</p>
-      <p className="text-base font-light text-start mb-4">
-        Visualize your Financial Statistics with ease and few clicks
-      </p>
+    <TitleBody
+      title="Dashboard"
+      subtitle="Visualize your Financial Statistics with ease and few clicks"
+    >
       <div className="md:grid gap-3 md:grid-cols-3 max-md:flex max-md:flex-col">
         <div className="h-40 md:flex-1 rounded-xl bg-neoShades-sidebarSelectedBlue">
           <div className="h-full flex items-center ">
@@ -53,7 +53,7 @@ const DashboardLayout = () => {
           <BarsDataset />
         </div>
       </div>
-    </div>
+    </TitleBody>
   );
 };
 
