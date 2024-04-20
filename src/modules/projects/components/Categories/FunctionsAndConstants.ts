@@ -1,8 +1,92 @@
+import { Type } from "typescript";
 import {
-  AssumptionDataType,
+  AssumptionResponseType,
+  BalanceSheetResponseType,
   CalculatedAssumptionType,
+  DebtResponseType,
+  EquityResponseType,
+  FixedAssetResponseType,
+  Is_CRNT_ResponseType,
+  WorkingCapitalResponseType,
 } from "../../../../types/FinancesType";
 import { ColumnTypes } from "../../../../types/generalTypes";
+
+export const Is_CRNT_DataColumns: ColumnTypes[] = [
+  { name: "Components", minWidth: "10%" },
+  { name: "2017", minWidth: "10%" },
+  { name: "2018", minWidth: "10%" },
+  { name: "2019", minWidth: "30%" },
+  { name: "2020", minWidth: "10%" },
+  { name: "2021", minWidth: "10%" },
+  { name: "2022", minWidth: "10%" },
+  { name: "2023", minWidth: "10%" },
+  { name: "2024", minWidth: "10%" },
+  { name: "2025", minWidth: "10%" },
+  { name: "2026", minWidth: "10%" },
+  { name: "2027", minWidth: "10%" },
+];
+export const workingCapitalDataColumns: ColumnTypes[] = [
+  { name: "SAR", minWidth: "10%" },
+  { name: "Notes", minWidth: "10%" },
+  { name: "2019", minWidth: "30%" },
+  { name: "2020", minWidth: "10%" },
+  { name: "2021", minWidth: "10%" },
+  { name: "2022", minWidth: "10%" },
+  { name: "2023", minWidth: "10%" },
+  { name: "2024", minWidth: "10%" },
+  { name: "2025", minWidth: "10%" },
+  { name: "2026", minWidth: "10%" },
+  { name: "2027", minWidth: "10%" },
+];
+export const fixedAssetDataColumns: ColumnTypes[] = [
+  { name: "FA", minWidth: "10%" },
+  { name: "2019", minWidth: "10%" },
+  { name: "2020", minWidth: "10%" },
+  { name: "2021", minWidth: "10%" },
+  { name: "2022", minWidth: "10%" },
+  { name: "2023", minWidth: "10%" },
+  { name: "2024", minWidth: "10%" },
+  { name: "2025", minWidth: "10%" },
+  { name: "2026", minWidth: "10%" },
+  { name: "2027", minWidth: "10%" },
+];
+export const balanceSheetDataColumns: ColumnTypes[] = [
+  { name: "BALANCE SHEET", minWidth: "10%" },
+  { name: "2019", minWidth: "10%" },
+  { name: "2020", minWidth: "10%" },
+  { name: "2021", minWidth: "10%" },
+  { name: "2022", minWidth: "10%" },
+  { name: "2023", minWidth: "10%" },
+  { name: "2024", minWidth: "10%" },
+  { name: "2025", minWidth: "10%" },
+  { name: "2026", minWidth: "10%" },
+  { name: "2027", minWidth: "10%" },
+];
+
+export const debtDataColumns: ColumnTypes[] = [
+  { name: "DEBT", minWidth: "10%" },
+  { name: "2019", minWidth: "30%" },
+  { name: "2020", minWidth: "10%" },
+  { name: "2021", minWidth: "10%" },
+  { name: "2022", minWidth: "10%" },
+  { name: "2023", minWidth: "10%" },
+  { name: "2024", minWidth: "10%" },
+  { name: "2025", minWidth: "10%" },
+  { name: "2026", minWidth: "10%" },
+  { name: "2027", minWidth: "10%" },
+];
+export const equityDataColumns: ColumnTypes[] = [
+  { name: "EQUITY", minWidth: "10%" },
+  { name: "2019", minWidth: "30%" },
+  { name: "2020", minWidth: "10%" },
+  { name: "2021", minWidth: "10%" },
+  { name: "2022", minWidth: "10%" },
+  { name: "2023", minWidth: "10%" },
+  { name: "2024", minWidth: "10%" },
+  { name: "2025", minWidth: "10%" },
+  { name: "2026", minWidth: "10%" },
+  { name: "2027", minWidth: "10%" },
+];
 
 export const assumptionDataColumns: ColumnTypes[] = [
   { name: "COMPONENT", minWidth: "10%" },
@@ -55,10 +139,10 @@ export const getMappedAssumptionRows = ({
   onChange,
   selectedAssumption,
 }: {
-  assumptionData: AssumptionDataType[];
+  assumptionData: AssumptionResponseType[];
   onChange: (index: number) => Promise<void>;
   checked: boolean[];
-  selectedAssumption: AssumptionDataType | undefined;
+  selectedAssumption: AssumptionResponseType | undefined;
   isCalculatedAssumptionsLoading: boolean;
 }) => {
   return assumptionData.map((data, index) => {
@@ -87,6 +171,123 @@ export const getMappedAssumptionRows = ({
     };
   });
 };
+export const getMappedIs_CRNT_Rows = (Is_CRNTData: Is_CRNT_ResponseType) => {
+  return Is_CRNTData.map((data) => {
+    return {
+      key1: data.components,
+      key2: data[2017],
+      key3: data[2018],
+      key4: data[2019],
+      key5: data[2020],
+      key6: data[2021],
+      key7: data[2022],
+      key8: data[2023],
+      key9: data[2024],
+      key10: data[2025],
+      key11: data[2026],
+      key12: data[2027],
+    };
+  });
+};
+export const getMappedWorkingCapitalRows = (
+  workingCapitalData: WorkingCapitalResponseType
+) => {
+  return workingCapitalData.map((data) => {
+    return {
+      key1: data.SAR,
+      key2: data.Notes,
+      key3: data[2019],
+      key4: data[2020],
+      key5: data[2021],
+      key6: data[2022],
+      key7: data[2023],
+      key8: data[2024],
+      key9: data[2025],
+      key10: data[2026],
+      key11: data[2027],
+    };
+  });
+};
+
+export const getMappedFixedAssetRows = (
+  fixedAssetData: FixedAssetResponseType
+) => {
+  return fixedAssetData.map((data) => {
+    return {
+      key1: data.FA,
+      key2: data[2019],
+      key3: data[2020],
+      key4: data[2021],
+      key5: data[2022],
+      key6: data[2023],
+      key7: data[2024],
+      key8: data[2025],
+      key9: data[2026],
+      key10: data[2027],
+    };
+  });
+};
+
+export const getMappedBalanceSheetRows = (
+  balanceSheetData: BalanceSheetResponseType
+) => {
+  return balanceSheetData.map((data) => {
+    return {
+      key1: data["BALANCE SHEET"],
+      key2: data[2019],
+      key3: data[2020],
+      key4: data[2021],
+      key5: data[2022],
+      key6: data[2023],
+      key7: data[2024],
+      key8: data[2025],
+      key9: data[2026],
+      key10: data[2027],
+    };
+  });
+};
+
+export const getMappedDebtRows = ({
+  debtData,
+}: {
+  debtData: DebtResponseType;
+}) => {
+  return debtData.map((data) => {
+    return {
+      key1: data.DEBT,
+      key2: data[2019],
+      key3: data[2020],
+      key4: data[2021],
+      key5: data[2022],
+      key6: data[2023],
+      key7: data[2024],
+      key8: data[2025],
+      key9: data[2026],
+      key10: data[2027],
+    };
+  });
+};
+export const getMappedEquityRows = ({
+  equityData,
+}: {
+  equityData: EquityResponseType;
+}) => {
+  return equityData.map((data) => {
+    return {
+      key1: data.EQUITY,
+      key2: data[2019],
+      key3: data[2020],
+      key4: data[2021],
+      key5: data[2022],
+      key6: data[2023],
+      key7: data[2024],
+      key8: data[2025],
+      key9: data[2026],
+      key10: data[2027],
+    };
+  });
+};
+
 export const getMappedCalculatedAssumptionsRows = (
   calculatedAssumptionsData: CalculatedAssumptionType
 ) => {

@@ -5,28 +5,40 @@ import {
 } from "../../../../services/finances";
 import DataGrid from "../../../core/components/DataGrid";
 import LoadingDataGrid from "../../../core/components/Loaders/LoadingDataGrid";
-import { AssumptionDataType } from "../../../../types/FinancesType";
+import {
+  AssumptionResponseType,
+  WorkingCapitalResponseType,
+} from "../../../../types/FinancesType";
 import TitleBody from "../../../core/components/TitleBody";
 import {
+  Is_CRNT_DataColumns,
   assumptionDataColumns,
   calculatedAssumptionsColumns,
   getMappedAssumptionRows,
-  getMappedCalculatedAssumptionsRows,
+  getMappedIs_CRNT_Rows,
 } from "./FunctionsAndConstants";
 import CustomTabs from "../../../core/components/CustomTabs";
+import WorkingCapital from "./WorkingCapital";
+import Debt from "./Debt";
+import Equity from "./Equity";
+import FixedAsset from "./FixedAsset";
+import BalanceSheet from "./BalanceSheet";
 
 const CategoriesLayout = () => {
   const { data: assumptionData, isLoading, isError } = useGetFinances();
   const [selectedAssumption, setSelectedAssumption] = useState<
-    AssumptionDataType | undefined
+    AssumptionResponseType | undefined
   >();
   const {
     mutate: mutateAssumptions,
     isPending: isCalculatedAssumptionsLoading,
-    data: calculatedAssumptionsData,
+    data: is_crntData,
   } = useGetCalculatedAssumptions();
   const [checked, setChecked] = useState<boolean[]>([]);
   const [calculatedOnce, setCalculatedOnce] = useState<boolean>(false);
+  const [workingCapitalData, setWorkingCapitalData] = useState<
+    WorkingCapitalResponseType | undefined
+  >();
   useEffect(() => {
     if (
       assumptionData?.data &&
@@ -84,25 +96,53 @@ const CategoriesLayout = () => {
         )}
 
         <CustomTabs
-          tabTitles={["Income Statement", "Balance Sheet", "General Ledger"]}
+          tabTitles={[
+            "Income Statement",
+            "Working Capital",
+            "Debt",
+            "Equity",
+            "Fixed Asset",
+            "Balance Sheet",
+          ]}
           tabChildren={[
             <div>
               {isCalculatedAssumptionsLoading ? (
                 <LoadingDataGrid columns={calculatedAssumptionsColumns} />
-              ) : calculatedAssumptionsData &&
-                calculatedAssumptionsData.data.length > 0 ? (
+              ) : is_crntData && is_crntData.data.length > 0 ? (
                 <DataGrid
-                  columns={calculatedAssumptionsColumns}
-                  rows={getMappedCalculatedAssumptionsRows(
-                    calculatedAssumptionsData.data
-                  )}
+                  columns={Is_CRNT_DataColumns}
+                  rows={getMappedIs_CRNT_Rows(is_crntData.data)}
                 />
               ) : (
                 calculatedOnce && <>No Record Found!</>
               )}
             </div>,
-            <div>Tab Child 2</div>,
-            <div>Tab Child 3</div>,
+            isCalculatedAssumptionsLoading ? (
+              <>Loading...</>
+            ) : is_crntData && is_crntData.data.length > 0 ? (
+              <WorkingCapital
+                Is_CRNT_Data={is_crntData!.data}
+                setWorkingCapitalData={(workingCapitalData) => {
+                  setWorkingCapitalData(workingCapitalData);
+                }}
+              />
+            ) : (
+              calculatedOnce && <>No Record Found!</>
+            ),
+            <Debt />,
+            <Equity />,
+            isLoading ? (
+              <>Loading...</>
+            ) : assumptionData && assumptionData.data.length > 0 ? (
+              <FixedAsset df_assumption={assumptionData.data} />
+            ) : (
+              <>No Record Found!</>
+            ),
+            workingCapitalData && workingCapitalData.length > 0 ? (
+              <BalanceSheet workingCapitalData={workingCapitalData} />
+            ) : (
+              <>No Record Found!</>
+            ),
           ]}
         />
       </div>
