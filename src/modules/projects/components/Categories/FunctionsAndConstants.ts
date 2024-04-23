@@ -90,7 +90,7 @@ export const equityDataColumns: ColumnTypes[] = [
 
 export const assumptionDataColumns: ColumnTypes[] = [
   { name: "COMPONENT", minWidth: "10%" },
-  { name: "Select", minWidth: "10%" },
+  { name: "Base", minWidth: "10%" },
   { name: "2018", minWidth: "10%" },
   { name: "2019", minWidth: "30%" },
   { name: "2020", minWidth: "10%" },
@@ -101,7 +101,6 @@ export const assumptionDataColumns: ColumnTypes[] = [
   { name: "2025", minWidth: "10%" },
   { name: "2026", minWidth: "10%" },
   { name: "2027", minWidth: "10%" },
-  { name: "Base", minWidth: "10%" },
 ];
 export const calculatedAssumptionsColumns: ColumnTypes[] = [
   { name: "Year", minWidth: "10%" },
@@ -132,60 +131,122 @@ export const calculatedAssumptionsColumns: ColumnTypes[] = [
   { name: "Other comprehensive income", minWidth: "10%" },
   { name: "Total comprehensive loss for the year", minWidth: "10%" },
 ];
+export const setToSales = (assumptionData: AssumptionResponseType[]) => {
+  let salesCount = 0;
+  let yoyCount = 0;
+  assumptionData.forEach((data) => {
+    if (data.BASE === "Sales%") salesCount++;
+    if (data.BASE === "YoY%") yoyCount++;
+  });
+  if (salesCount > 1 || yoyCount > 1) {
+    assumptionData.forEach((data) => {
+      data.BASE = "Sales%";
+    });
+  }
+  return assumptionData;
+};
+export const removeDuplicateAssumptionData = (
+  assumptionData: AssumptionResponseType[]
+) => {
+  const uniqueData: AssumptionResponseType[] = [];
+  for (let i = 0; i < assumptionData.length; i++) {
+    if (
+      uniqueData.findIndex(
+        (data) => data["COMPONENT "] === assumptionData[i]["COMPONENT "]
+      ) === -1
+    ) {
+      uniqueData.push(assumptionData[i]);
+    }
+  }
+  // const updatedData = setToSales(uniqueData);
+  return uniqueData;
+};
+export function setObjKeyValue<KeyType extends keyof AssumptionResponseType>({
+  index,
+  key,
+  obj,
+  value,
+}: {
+  key: KeyType;
+  value: AssumptionResponseType[KeyType];
+  obj: AssumptionResponseType[];
+  index: number;
+}): AssumptionResponseType[] {
+  obj[index][key] = value;
+  return obj;
+}
 export const getMappedAssumptionRows = ({
   assumptionData,
-  checked,
-  isCalculatedAssumptionsLoading,
+  selectedKeyIndex,
   onChange,
-  selectedAssumption,
+  onTextChange,
+  onEditClick,
+  onSaveClick,
 }: {
   assumptionData: AssumptionResponseType[];
-  onChange: (index: number) => Promise<void>;
-  checked: boolean[];
-  selectedAssumption: AssumptionResponseType | undefined;
-  isCalculatedAssumptionsLoading: boolean;
+  selectedKeyIndex: {
+    index: number;
+    key: keyof AssumptionResponseType;
+  } | null;
+  onTextChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+    keyName: keyof AssumptionResponseType
+  ) => void;
+  onEditClick: (
+    selectedIndex: number,
+    selectedKey: keyof AssumptionResponseType
+  ) => void;
+  onSaveClick: () => void;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>, index: number) => void;
 }) => {
-  return assumptionData.map((data, index) => {
-    return {
-      key1: data["COMPONENT "],
-      select: {
-        isChecked: checked[index] ?? false,
-        isLoading:
-          selectedAssumption &&
-          selectedAssumption["COMPONENT "] === data["COMPONENT "]
-            ? isCalculatedAssumptionsLoading
-            : false,
-        onChange: () => onChange(index),
+  const uniqueData = removeDuplicateAssumptionData(assumptionData);
+  const currentYear = new Date().getFullYear();
+  return uniqueData.map((data) => {
+    const map: { [x: string]: string | number | boolean | {} } = {
+      0: data["COMPONENT "],
+      1: {
+        defaultValue: data.BASE,
+        onChange: onChange,
       },
-      key3: data[2018],
-      key4: data[2019],
-      key5: data[2020],
-      key6: data[2021],
-      key7: data[2022],
-      key8: data[2023],
-      key9: data[2024],
-      key10: data[2025],
-      key11: data[2026],
-      key12: data[2027],
-      key13: data.BASE,
     };
+    Object.keys(data)
+      .filter((key) => /^\d+$/.test(key))
+      .forEach((keyData) => {
+        const key: keyof AssumptionResponseType =
+          keyData as keyof AssumptionResponseType;
+        if (Number(key) >= currentYear) {
+          map[key] = {
+            data: data[key as keyof AssumptionResponseType],
+            onChange: onTextChange,
+            onEditClick: onEditClick,
+            onSaveClick: onSaveClick,
+            selectedKeyIndex: selectedKeyIndex,
+          };
+        } else {
+          map[key] = Number(
+            data[key as keyof AssumptionResponseType]
+          ).toPrecision(2);
+        }
+      });
+    return map;
   });
 };
 export const getMappedIs_CRNT_Rows = (Is_CRNTData: Is_CRNT_ResponseType) => {
   return Is_CRNTData.map((data) => {
     return {
       key1: data.components,
-      key2: data[2017],
-      key3: data[2018],
-      key4: data[2019],
-      key5: data[2020],
-      key6: data[2021],
-      key7: data[2022],
-      key8: data[2023],
-      key9: data[2024],
-      key10: data[2025],
-      key11: data[2026],
-      key12: data[2027],
+      key2: data[2017]?.toPrecision(2) ?? "NA",
+      key3: data[2018]?.toPrecision(2) ?? "NA",
+      key4: data[2019]?.toPrecision(2) ?? "NA",
+      key5: data[2020]?.toPrecision(2) ?? "NA",
+      key6: data[2021]?.toPrecision(2) ?? "NA",
+      key7: data[2022]?.toPrecision(2) ?? "NA",
+      key8: data[2023]?.toPrecision(2) ?? "NA",
+      key9: Number(data[2024])?.toPrecision(2) ?? "NA",
+      key10: Number(data[2025])?.toPrecision(2) ?? "NA",
+      key11: Number(data[2026])?.toPrecision(2) ?? "NA",
+      key12: Number(data[2027])?.toPrecision(2) ?? "NA",
     };
   });
 };
@@ -196,15 +257,15 @@ export const getMappedWorkingCapitalRows = (
     return {
       key1: data.SAR,
       key2: data.Notes,
-      key3: data[2019],
-      key4: data[2020],
-      key5: data[2021],
-      key6: data[2022],
-      key7: data[2023],
-      key8: data[2024],
-      key9: data[2025],
-      key10: data[2026],
-      key11: data[2027],
+      key3: data[2019]?.toPrecision(2) ?? "NA",
+      key4: data[2020]?.toPrecision(2) ?? "NA",
+      key5: data[2021]?.toPrecision(2) ?? "NA",
+      key6: data[2022]?.toPrecision(2) ?? "NA",
+      key7: data[2023]?.toPrecision(2) ?? "NA",
+      key8: data[2024]?.toPrecision(2) ?? "NA",
+      key9: data[2025]?.toPrecision(2) ?? "NA",
+      key10: data[2026]?.toPrecision(2) ?? "NA",
+      key11: data[2027]?.toPrecision(2) ?? "NA",
     };
   });
 };
@@ -215,15 +276,15 @@ export const getMappedFixedAssetRows = (
   return fixedAssetData.map((data) => {
     return {
       key1: data.FA,
-      key2: data[2019],
-      key3: data[2020],
-      key4: data[2021],
-      key5: data[2022],
-      key6: data[2023],
-      key7: data[2024],
-      key8: data[2025],
-      key9: data[2026],
-      key10: data[2027],
+      key2: data[2019]?.toPrecision(2) ?? "NA",
+      key3: data[2020]?.toPrecision(2) ?? "NA",
+      key4: data[2021]?.toPrecision(2) ?? "NA",
+      key5: data[2022]?.toPrecision(2) ?? "NA",
+      key6: data[2023]?.toPrecision(2) ?? "NA",
+      key7: data[2024]?.toPrecision(2) ?? "NA",
+      key8: data[2025]?.toPrecision(2) ?? "NA",
+      key9: data[2026]?.toPrecision(2) ?? "NA",
+      key10: data[2027]?.toPrecision(2) ?? "NA",
     };
   });
 };
@@ -234,15 +295,15 @@ export const getMappedBalanceSheetRows = (
   return balanceSheetData.map((data) => {
     return {
       key1: data["BALANCE SHEET"],
-      key2: data[2019],
-      key3: data[2020],
-      key4: data[2021],
-      key5: data[2022],
-      key6: data[2023],
-      key7: data[2024],
-      key8: data[2025],
-      key9: data[2026],
-      key10: data[2027],
+      key2: data[2019]?.toPrecision(2) ?? "NA",
+      key3: data[2020]?.toPrecision(2) ?? "NA",
+      key4: data[2021]?.toPrecision(2) ?? "NA",
+      key5: data[2022]?.toPrecision(2) ?? "NA",
+      key6: data[2023]?.toPrecision(2) ?? "NA",
+      key7: data[2024]?.toPrecision(2) ?? "NA",
+      key8: data[2025]?.toPrecision(2) ?? "NA",
+      key9: data[2026]?.toPrecision(2) ?? "NA",
+      key10: data[2027]?.toPrecision(2) ?? "NA",
     };
   });
 };
@@ -255,15 +316,15 @@ export const getMappedDebtRows = ({
   return debtData.map((data) => {
     return {
       key1: data.DEBT,
-      key2: data[2019],
-      key3: data[2020],
-      key4: data[2021],
-      key5: data[2022],
-      key6: data[2023],
-      key7: data[2024],
-      key8: data[2025],
-      key9: data[2026],
-      key10: data[2027],
+      key2: data[2019]?.toPrecision(2) ?? "NA",
+      key3: data[2020]?.toPrecision(2) ?? "NA",
+      key4: data[2021]?.toPrecision(2) ?? "NA",
+      key5: data[2022]?.toPrecision(2) ?? "NA",
+      key6: data[2023]?.toPrecision(2) ?? "NA",
+      key7: data[2024]?.toPrecision(2) ?? "NA",
+      key8: data[2025]?.toPrecision(2) ?? "NA",
+      key9: data[2026]?.toPrecision(2) ?? "NA",
+      key10: data[2027]?.toPrecision(2) ?? "NA",
     };
   });
 };
@@ -275,15 +336,15 @@ export const getMappedEquityRows = ({
   return equityData.map((data) => {
     return {
       key1: data.EQUITY,
-      key2: data[2019],
-      key3: data[2020],
-      key4: data[2021],
-      key5: data[2022],
-      key6: data[2023],
-      key7: data[2024],
-      key8: data[2025],
-      key9: data[2026],
-      key10: data[2027],
+      key2: data[2019]?.toPrecision(2) ?? "NA",
+      key3: data[2020]?.toPrecision(2) ?? "NA",
+      key4: data[2021]?.toPrecision(2) ?? "NA",
+      key5: data[2022]?.toPrecision(2) ?? "NA",
+      key6: data[2023]?.toPrecision(2) ?? "NA",
+      key7: data[2024]?.toPrecision(2) ?? "NA",
+      key8: data[2025]?.toPrecision(2) ?? "NA",
+      key9: data[2026]?.toPrecision(2) ?? "NA",
+      key10: data[2027]?.toPrecision(2) ?? "NA",
     };
   });
 };

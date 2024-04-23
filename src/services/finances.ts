@@ -14,6 +14,10 @@ import { GET_ROUTES, POST_ROUTES } from "./apiRoutes";
 
 export const getFinances = async () => {
   const res = await get<AssumptionResponseType[]>(GET_ROUTES.assumption_data);
+  res.data.forEach((data) => {
+    data.BASE = "Sales%";
+  });
+
   return res;
 };
 
@@ -714,7 +718,6 @@ export const getCalculatedAssumptions = async (
   const newAssumptionData = df_assumption.map((data) => {
     return convertKeysAndReOrder(data, keyMap);
   });
-  console.log("newAssumptionData = ", newAssumptionData);
   return newAssumptionData;
 };
 const postIs_CRNT = async (df_assumption: AssumptionResponseType[]) => {

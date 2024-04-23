@@ -16,6 +16,8 @@ import {
   calculatedAssumptionsColumns,
   getMappedAssumptionRows,
   getMappedIs_CRNT_Rows,
+  removeDuplicateAssumptionData,
+  setObjKeyValue,
 } from "./FunctionsAndConstants";
 import CustomTabs from "../../../core/components/CustomTabs";
 import WorkingCapital from "./WorkingCapital";
@@ -43,12 +45,41 @@ const CategoriesLayout = () => {
     if (
       assumptionData?.data &&
       (checked.length === 0 || checked.length !== assumptionData.data.length)
-    )
-      setChecked(Array(assumptionData?.data.length ?? 0).fill(false));
+    ) {
+      if (!calculatedOnce) {
+        setCalculatedOnce(true);
+      }
+      mutateAssumptions(
+        assumptionData.data.map((data) => {
+          return {
+            "COMPONENT ": data["COMPONENT "],
+            BASE: data.BASE,
+            Select: data.Select,
+            "2018": data[2018],
+            "2019": data[2019],
+            "2020": data[2020],
+            "2021": data[2021],
+            "2022": data[2022],
+            "2023": data[2023],
+            "2024": data[2024],
+            "2025": data[2025],
+            "2026": data[2026],
+            "2027": data[2027],
+          };
+        })
+      );
+    }
   }, [assumptionData?.data]);
+  const [selectedKeyIndex, setSelectedKeyIndex] = useState<{
+    index: number;
+    key: keyof AssumptionResponseType;
+  } | null>(null);
+  const [updatedAssumptionData, setUpdatedAssumptionData] = useState<
+    AssumptionResponseType[] | null
+  >(null);
   return (
     <TitleBody title="Categories">
-      <div className="rounded-xl p-1 bg-primary-bgBlack">
+      <div className="rounded-xl p-1 bg-transparent">
         {isError ? (
           <>Something went wrong</>
         ) : isLoading ? (
@@ -57,20 +88,22 @@ const CategoriesLayout = () => {
           <DataGrid
             columns={assumptionDataColumns}
             rows={getMappedAssumptionRows({
-              assumptionData: assumptionData.data,
-              checked,
-              isCalculatedAssumptionsLoading,
-              selectedAssumption,
-              onChange: async (index: number) => {
-                const previousVal = checked[index];
-                let newChecked = Array(assumptionData?.data.length ?? 0).fill(
-                  false
+              assumptionData: updatedAssumptionData
+                ? updatedAssumptionData
+                : assumptionData.data,
+              selectedKeyIndex: selectedKeyIndex,
+              onChange: (
+                e: React.ChangeEvent<HTMLSelectElement>,
+                index: number
+              ) => {
+                const uniqueData = removeDuplicateAssumptionData(
+                  assumptionData.data
                 );
-                newChecked[index] = !previousVal;
-                setChecked(newChecked);
-                if (!calculatedOnce) setCalculatedOnce(true);
+                const updatedData = uniqueData;
+                updatedData[index]["BASE"] = e.target.value;
+                setUpdatedAssumptionData(updatedData);
                 mutateAssumptions(
-                  assumptionData.data.map((data) => {
+                  updatedData.map((data) => {
                     return {
                       "COMPONENT ": data["COMPONENT "],
                       BASE: data.BASE,
@@ -88,6 +121,69 @@ const CategoriesLayout = () => {
                     };
                   })
                 );
+              },
+              onEditClick: (selectedIndex, selectedKey) => {
+                setSelectedKeyIndex({ index: selectedIndex, key: selectedKey });
+              },
+              onSaveClick: () => {
+                setSelectedKeyIndex(null);
+                if (updatedAssumptionData) {
+                  mutateAssumptions(
+                    updatedAssumptionData.map((data) => {
+                      return {
+                        "COMPONENT ": data["COMPONENT "],
+                        BASE: data.BASE,
+                        Select: data.Select,
+                        "2018": data[2018],
+                        "2019": data[2019],
+                        "2020": data[2020],
+                        "2021": data[2021],
+                        "2022": data[2022],
+                        "2023": data[2023],
+                        "2024": data[2024],
+                        "2025": data[2025],
+                        "2026": data[2026],
+                        "2027": data[2027],
+                      };
+                    })
+                  );
+                }
+              },
+              onTextChange: (
+                e: React.ChangeEvent<HTMLInputElement>,
+                index: number,
+                keyName: keyof AssumptionResponseType
+              ) => {
+                const uniqueData = removeDuplicateAssumptionData(
+                  assumptionData.data
+                );
+                const updatedAssumptionData = uniqueData;
+                const finalUpdatedAssumptionData = setObjKeyValue({
+                  index: index,
+                  key: keyName,
+                  obj: updatedAssumptionData,
+                  value: Number(e.target.value),
+                });
+                setUpdatedAssumptionData(finalUpdatedAssumptionData);
+                // mutateAssumptions(
+                //   finalUpdatedAssumptionData.map((data) => {
+                //     return {
+                //       "COMPONENT ": data["COMPONENT "],
+                //       BASE: data.BASE,
+                //       Select: data.Select,
+                //       "2018": data[2018],
+                //       "2019": data[2019],
+                //       "2020": data[2020],
+                //       "2021": data[2021],
+                //       "2022": data[2022],
+                //       "2023": data[2023],
+                //       "2024": data[2024],
+                //       "2025": data[2025],
+                //       "2026": data[2026],
+                //       "2027": data[2027],
+                //     };
+                //   })
+                // );
               },
             })}
           />
