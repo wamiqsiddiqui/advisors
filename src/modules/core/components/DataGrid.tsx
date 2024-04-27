@@ -61,7 +61,9 @@ const DataGrid = ({ columns, rows }: DataGridProps) => {
                       )}
                     </div>
                   </td>
-                ) : Object.keys(row)[cellIndex] === "1" ? (
+                ) : rowData &&
+                  typeof rowData === "object" &&
+                  Object.values(rowData).find((value) => value === "select") ? (
                   <td
                     className={`${cellIndex === 0 && "rounded-l-2xl"} ${
                       cellIndex == Object.values(row).length - 1 &&
@@ -90,11 +92,24 @@ const DataGrid = ({ columns, rows }: DataGridProps) => {
                         >
                           YoY%
                         </option>
+                        <option
+                          className="bg-neoShades-dashboardHeaderBgBlack"
+                          value="% of OB"
+                        >
+                          % of OB
+                        </option>
+                        <option
+                          className="bg-neoShades-dashboardHeaderBgBlack"
+                          value="% of OB + Addns"
+                        >
+                          % of OB + Addns
+                        </option>
                       </select>
                     </div>
                   </td>
-                ) : /^\d+$/.test(Object.keys(row)[cellIndex]) &&
-                  Number(Object.keys(row)[cellIndex]) >= currentYear ? (
+                ) : rowData &&
+                  typeof rowData === "object" &&
+                  Object.keys(rowData).find((key) => key === "onTextChange") ? (
                   <td
                     className={`${cellIndex === 0 && "rounded-l-2xl"} ${
                       cellIndex == Object.values(row).length - 1 &&
@@ -109,11 +124,15 @@ const DataGrid = ({ columns, rows }: DataGridProps) => {
                         <input
                           className="bg-transparent py-0 px-2 w-16"
                           placeholder="year"
-                          defaultValue={Number(rowData.data).toPrecision(1)}
+                          defaultValue={
+                            rowData?.data
+                              ? Number(rowData.data).toPrecision(1)
+                              : undefined
+                          }
                           onChange={(
                             e: React.ChangeEvent<HTMLInputElement>
                           ) => {
-                            rowData.onChange(
+                            rowData.onTextChange(
                               e,
                               index,
                               Object.keys(row)[cellIndex]

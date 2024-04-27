@@ -1,12 +1,12 @@
-import { Type } from "typescript";
 import {
   AssumptionResponseType,
   BalanceSheetResponseType,
-  CalculatedAssumptionType,
   DebtResponseType,
   EquityResponseType,
   FixedAssetResponseType,
   Is_CRNT_ResponseType,
+  WorkingCapitalIndicatorsResponseType,
+  WorkingCapitalIndicatorsResponseTypeArray,
   WorkingCapitalResponseType,
 } from "../../../../types/FinancesType";
 import { ColumnTypes } from "../../../../types/generalTypes";
@@ -37,6 +37,15 @@ export const workingCapitalDataColumns: ColumnTypes[] = [
   { name: "2025", minWidth: "10%" },
   { name: "2026", minWidth: "10%" },
   { name: "2027", minWidth: "10%" },
+];
+export const workingCapitalIndicatorsDataColumns: ColumnTypes[] = [
+  { name: "SAR", minWidth: "10%" },
+  { name: "Notes", minWidth: "10%" },
+  { name: "2019", minWidth: "30%" },
+  { name: "2020", minWidth: "10%" },
+  { name: "2021", minWidth: "10%" },
+  { name: "2022", minWidth: "10%" },
+  { name: "2023", minWidth: "10%" },
 ];
 export const fixedAssetDataColumns: ColumnTypes[] = [
   { name: "FA", minWidth: "10%" },
@@ -131,20 +140,7 @@ export const calculatedAssumptionsColumns: ColumnTypes[] = [
   { name: "Other comprehensive income", minWidth: "10%" },
   { name: "Total comprehensive loss for the year", minWidth: "10%" },
 ];
-export const setToSales = (assumptionData: AssumptionResponseType[]) => {
-  let salesCount = 0;
-  let yoyCount = 0;
-  assumptionData.forEach((data) => {
-    if (data.BASE === "Sales%") salesCount++;
-    if (data.BASE === "YoY%") yoyCount++;
-  });
-  if (salesCount > 1 || yoyCount > 1) {
-    assumptionData.forEach((data) => {
-      data.BASE = "Sales%";
-    });
-  }
-  return assumptionData;
-};
+
 export const removeDuplicateAssumptionData = (
   assumptionData: AssumptionResponseType[]
 ) => {
@@ -152,13 +148,12 @@ export const removeDuplicateAssumptionData = (
   for (let i = 0; i < assumptionData.length; i++) {
     if (
       uniqueData.findIndex(
-        (data) => data["COMPONENT "] === assumptionData[i]["COMPONENT "]
+        (data) => data.COMPONENT === assumptionData[i].COMPONENT
       ) === -1
     ) {
       uniqueData.push(assumptionData[i]);
     }
   }
-  // const updatedData = setToSales(uniqueData);
   return uniqueData;
 };
 export function setObjKeyValue<KeyType extends keyof AssumptionResponseType>({
@@ -172,6 +167,22 @@ export function setObjKeyValue<KeyType extends keyof AssumptionResponseType>({
   obj: AssumptionResponseType[];
   index: number;
 }): AssumptionResponseType[] {
+  obj[index][key] = value;
+  return obj;
+}
+export function setIndicatorsObjKeyValue<
+  KeyType extends keyof WorkingCapitalIndicatorsResponseType
+>({
+  index,
+  key,
+  obj,
+  value,
+}: {
+  key: KeyType;
+  value: WorkingCapitalIndicatorsResponseType[KeyType];
+  obj: WorkingCapitalIndicatorsResponseType[];
+  index: number;
+}): WorkingCapitalIndicatorsResponseTypeArray {
   obj[index][key] = value;
   return obj;
 }
@@ -204,8 +215,9 @@ export const getMappedAssumptionRows = ({
   const currentYear = new Date().getFullYear();
   return uniqueData.map((data) => {
     const map: { [x: string]: string | number | boolean | {} } = {
-      0: data["COMPONENT "],
+      0: data.COMPONENT,
       1: {
+        displayType: "select",
         defaultValue: data.BASE,
         onChange: onChange,
       },
@@ -218,7 +230,7 @@ export const getMappedAssumptionRows = ({
         if (Number(key) >= currentYear) {
           map[key] = {
             data: data[key as keyof AssumptionResponseType],
-            onChange: onTextChange,
+            onTextChange: onTextChange,
             onEditClick: onEditClick,
             onSaveClick: onSaveClick,
             selectedKeyIndex: selectedKeyIndex,
@@ -236,18 +248,77 @@ export const getMappedIs_CRNT_Rows = (Is_CRNTData: Is_CRNT_ResponseType) => {
   return Is_CRNTData.map((data) => {
     return {
       key1: data.components,
-      key2: data[2017]?.toPrecision(2) ?? "NA",
-      key3: data[2018]?.toPrecision(2) ?? "NA",
-      key4: data[2019]?.toPrecision(2) ?? "NA",
-      key5: data[2020]?.toPrecision(2) ?? "NA",
-      key6: data[2021]?.toPrecision(2) ?? "NA",
-      key7: data[2022]?.toPrecision(2) ?? "NA",
-      key8: data[2023]?.toPrecision(2) ?? "NA",
-      key9: Number(data[2024])?.toPrecision(2) ?? "NA",
-      key10: Number(data[2025])?.toPrecision(2) ?? "NA",
-      key11: Number(data[2026])?.toPrecision(2) ?? "NA",
-      key12: Number(data[2027])?.toPrecision(2) ?? "NA",
+      key2: data[2017],
+      key3: data[2018],
+      key4: data[2019],
+      key5: data[2020],
+      key6: data[2021],
+      key7: data[2022],
+      key8: data[2023],
+      key9: Number(data[2024]),
+      key10: Number(data[2025]),
+      key11: Number(data[2026]),
+      key12: Number(data[2027]),
     };
+  });
+};
+export const getMappedWorkingCapitalIndicatorRows = (
+  workingCapitalData: WorkingCapitalIndicatorsResponseTypeArray
+) => {
+  return workingCapitalData.map((data) => {
+    return {
+      key1: data.SAR,
+      key2: data.Notes,
+      key3: data[2019],
+      key4: data[2020],
+      key5: data[2021],
+      key6: data[2022],
+      key7: data[2023],
+    };
+  });
+};
+export const getMappedWorrkingCapitalEditableRows = ({
+  workingCapitalIndicatorsData,
+  onTextChange,
+  onEditClick,
+  onSaveClick,
+  selectedKeyIndex,
+}: {
+  selectedKeyIndex: {
+    index: number;
+    key: keyof WorkingCapitalIndicatorsResponseType;
+  } | null;
+  workingCapitalIndicatorsData: WorkingCapitalIndicatorsResponseTypeArray;
+  onTextChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+    keyName: keyof WorkingCapitalIndicatorsResponseType
+  ) => void;
+  onEditClick: (
+    selectedIndex: number,
+    selectedKey: keyof WorkingCapitalIndicatorsResponseType
+  ) => void;
+  onSaveClick: () => void;
+}) => {
+  return workingCapitalIndicatorsData.map((data) => {
+    const map: { [x: string]: string | number | boolean | {} } = {
+      0: data.SAR,
+      1: data.Notes,
+    };
+    Object.keys(data)
+      .filter((key) => /^\d+$/.test(key))
+      .forEach((keyData) => {
+        const key: keyof WorkingCapitalIndicatorsResponseType =
+          keyData as keyof WorkingCapitalIndicatorsResponseType;
+        map[key] = {
+          data: data[key as keyof WorkingCapitalIndicatorsResponseType],
+          onTextChange: onTextChange,
+          onEditClick: onEditClick,
+          onSaveClick: onSaveClick,
+          selectedKeyIndex: selectedKeyIndex,
+        };
+      });
+    return map;
   });
 };
 export const getMappedWorkingCapitalRows = (
@@ -257,15 +328,15 @@ export const getMappedWorkingCapitalRows = (
     return {
       key1: data.SAR,
       key2: data.Notes,
-      key3: data[2019]?.toPrecision(2) ?? "NA",
-      key4: data[2020]?.toPrecision(2) ?? "NA",
-      key5: data[2021]?.toPrecision(2) ?? "NA",
-      key6: data[2022]?.toPrecision(2) ?? "NA",
-      key7: data[2023]?.toPrecision(2) ?? "NA",
-      key8: data[2024]?.toPrecision(2) ?? "NA",
-      key9: data[2025]?.toPrecision(2) ?? "NA",
-      key10: data[2026]?.toPrecision(2) ?? "NA",
-      key11: data[2027]?.toPrecision(2) ?? "NA",
+      key3: data[2019],
+      key4: data[2020],
+      key5: data[2021],
+      key6: data[2022],
+      key7: data[2023],
+      key8: data[2024],
+      key9: data[2025],
+      key10: data[2026],
+      key11: data[2027],
     };
   });
 };
@@ -345,40 +416,6 @@ export const getMappedEquityRows = ({
       key8: data[2025]?.toPrecision(2) ?? "NA",
       key9: data[2026]?.toPrecision(2) ?? "NA",
       key10: data[2027]?.toPrecision(2) ?? "NA",
-    };
-  });
-};
-
-export const getMappedCalculatedAssumptionsRows = (
-  calculatedAssumptionsData: CalculatedAssumptionType
-) => {
-  return calculatedAssumptionsData.map((data) => {
-    return {
-      year: data.year,
-      revenue: data.revenue,
-      "cost of revenues": data["cost of revenues"],
-      "gross profit": data["gross profit"],
-      "operating expenses": data["operating expenses"],
-      "selling and marketing expenses": data["selling and marketing expenses"],
-      "general and administrative expenses":
-        data["general and administrative expenses"],
-      "profit from operations": data["profit from operations"],
-      "other income/(expense)": data["other income/(expense)"],
-      "share of income from equity accounted investment":
-        data["share of income from equity accounted investment"],
-      "fair value loss on investments": data["fair value loss on investments"],
-      dividends: data.dividends,
-      "other expenses": data["other expenses"],
-      "other income": data["other income"],
-      "finance cost": data["finance cost"],
-      "profit / loss before zakat": data["profit / loss before zakat"],
-      zakat: data.zakat,
-      "net loss for the year": data["net loss for the year"],
-      "re-measurements of employee termination benefits":
-        data["re-measurements of employee termination benefits"],
-      "other comprehensive income": data["other comprehensive income"],
-      "total comprehensive loss for the year":
-        data["total comprehensive loss for the year"],
     };
   });
 };

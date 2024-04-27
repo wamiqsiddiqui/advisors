@@ -6,6 +6,7 @@ export const GET_ROUTES = {
 export const POST_ROUTES = {
   is_crnt: "is_crnt",
   workingCapital: "workingCapital",
+  workingCapitalIndicators: "workingCapitalIndicators",
   fixedAsset: "fixedAsset",
   BalanceSheet: "BalanceSheet",
 };
