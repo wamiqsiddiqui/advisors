@@ -25,6 +25,8 @@ import Debt from "./Debt";
 import Equity from "./Equity";
 import FixedAsset from "./FixedAsset";
 import BalanceSheet from "./BalanceSheet";
+import GA_Expenses from "./GA_Expenses";
+import SM_Expenses from "./SM_Expenses";
 
 const CategoriesLayout = () => {
   const { data: assumptionData, isLoading, isError } = useGetFinances();
@@ -171,6 +173,8 @@ const CategoriesLayout = () => {
             "Equity",
             "Fixed Asset",
             "Balance Sheet",
+            "GA Expenses",
+            "SM Expenses",
           ]}
           tabChildren={[
             <div>
@@ -211,6 +215,8 @@ const CategoriesLayout = () => {
             ) : (
               <>No Record Found!</>
             ),
+            <GA_Expenses />,
+            <SM_Expenses />,
           ]}
         />
       </div>

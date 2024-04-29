@@ -4,7 +4,13 @@ import {
   DebtResponseType,
   EquityResponseType,
   FixedAssetResponseType,
+  GA_AssumptionResponseType,
+  GA_AssumptionResponseTypeArray,
+  GA_ExpensesResponseType,
   Is_CRNT_ResponseType,
+  SM_AssumptionResponseType,
+  SM_AssumptionResponseTypeArray,
+  SM_ExpensesResponseType,
   WorkingCapitalIndicatorsResponseType,
   WorkingCapitalIndicatorsResponseTypeArray,
   WorkingCapitalResponseType,
@@ -111,6 +117,64 @@ export const assumptionDataColumns: ColumnTypes[] = [
   { name: "2026", minWidth: "10%" },
   { name: "2027", minWidth: "10%" },
 ];
+
+export const ga_assumptionDataColumns: ColumnTypes[] = [
+  { name: "COMPONENT", minWidth: "10%" },
+  { name: "Base", minWidth: "10%" },
+  { name: "2019", minWidth: "30%" },
+  { name: "2020", minWidth: "10%" },
+  { name: "2021", minWidth: "10%" },
+  { name: "2022", minWidth: "10%" },
+  { name: "2023", minWidth: "10%" },
+  { name: "2024", minWidth: "10%" },
+  { name: "2025", minWidth: "10%" },
+  { name: "2026", minWidth: "10%" },
+  { name: "2027", minWidth: "10%" },
+  { name: "2028", minWidth: "10%" },
+];
+export const sm_assumptionDataColumns: ColumnTypes[] = [
+  { name: "COMPONENT", minWidth: "10%" },
+  { name: "Base", minWidth: "10%" },
+  { name: "2019", minWidth: "30%" },
+  { name: "2020", minWidth: "10%" },
+  { name: "2021", minWidth: "10%" },
+  { name: "2022", minWidth: "10%" },
+  { name: "2023", minWidth: "10%" },
+  { name: "2024", minWidth: "10%" },
+  { name: "2025", minWidth: "10%" },
+  { name: "2026", minWidth: "10%" },
+  { name: "2027", minWidth: "10%" },
+  { name: "2028", minWidth: "10%" },
+];
+
+export const ga_ExpensesDataColumns: ColumnTypes[] = [
+  { name: "GENERAL & ADMINISTRATIVE EXPENSES", minWidth: "10%" },
+  { name: "2019", minWidth: "30%" },
+  { name: "2020", minWidth: "10%" },
+  { name: "2021", minWidth: "10%" },
+  { name: "2022", minWidth: "10%" },
+  { name: "2023", minWidth: "10%" },
+  { name: "2024", minWidth: "10%" },
+  { name: "2025", minWidth: "10%" },
+  { name: "2026", minWidth: "10%" },
+  { name: "2027", minWidth: "10%" },
+  { name: "2028", minWidth: "10%" },
+];
+
+export const sm_ExpensesDataColumns: ColumnTypes[] = [
+  { name: "GENERAL & ADMINISTRATIVE EXPENSES", minWidth: "10%" },
+  { name: "2019", minWidth: "30%" },
+  { name: "2020", minWidth: "10%" },
+  { name: "2021", minWidth: "10%" },
+  { name: "2022", minWidth: "10%" },
+  { name: "2023", minWidth: "10%" },
+  { name: "2024", minWidth: "10%" },
+  { name: "2025", minWidth: "10%" },
+  { name: "2026", minWidth: "10%" },
+  { name: "2027", minWidth: "10%" },
+  { name: "2028", minWidth: "10%" },
+];
+
 export const calculatedAssumptionsColumns: ColumnTypes[] = [
   { name: "Year", minWidth: "10%" },
   { name: "Revenue", minWidth: "10%" },
@@ -156,6 +220,37 @@ export const removeDuplicateAssumptionData = (
   }
   return uniqueData;
 };
+export const removeDuplicateGA_AssumptionData = (
+  ga_assumptionData: GA_AssumptionResponseTypeArray
+) => {
+  const uniqueData: GA_AssumptionResponseTypeArray = [];
+  for (let i = 0; i < ga_assumptionData.length; i++) {
+    if (
+      uniqueData.findIndex(
+        (data) => data.COMPONENT === ga_assumptionData[i].COMPONENT
+      ) === -1
+    ) {
+      uniqueData.push(ga_assumptionData[i]);
+    }
+  }
+  return uniqueData;
+};
+export const removeDuplicateSM_AssumptionData = (
+  sm_assumptionData: SM_AssumptionResponseTypeArray
+) => {
+  const uniqueData: SM_AssumptionResponseTypeArray = [];
+  for (let i = 0; i < sm_assumptionData.length; i++) {
+    if (
+      uniqueData.findIndex(
+        (data) => data.COMPONENT === sm_assumptionData[i].COMPONENT
+      ) === -1
+    ) {
+      uniqueData.push(sm_assumptionData[i]);
+    }
+  }
+  return uniqueData;
+};
+
 export function setObjKeyValue<KeyType extends keyof AssumptionResponseType>({
   index,
   key,
@@ -186,6 +281,41 @@ export function setIndicatorsObjKeyValue<
   obj[index][key] = value;
   return obj;
 }
+
+export function setGA_AssumptionObjKeyValue<
+  KeyType extends keyof GA_AssumptionResponseType
+>({
+  index,
+  key,
+  obj,
+  value,
+}: {
+  key: KeyType;
+  value: GA_AssumptionResponseType[KeyType];
+  obj: GA_AssumptionResponseType[];
+  index: number;
+}): GA_AssumptionResponseType[] {
+  obj[index][key] = value;
+  return obj;
+}
+
+export function setSM_AssumptionObjKeyValue<
+  KeyType extends keyof SM_AssumptionResponseType
+>({
+  index,
+  key,
+  obj,
+  value,
+}: {
+  key: KeyType;
+  value: SM_AssumptionResponseType[KeyType];
+  obj: SM_AssumptionResponseType[];
+  index: number;
+}): SM_AssumptionResponseType[] {
+  obj[index][key] = value;
+  return obj;
+}
+
 export const getMappedAssumptionRows = ({
   assumptionData,
   selectedKeyIndex,
@@ -244,6 +374,167 @@ export const getMappedAssumptionRows = ({
     return map;
   });
 };
+
+export const getMappedGA_ExpensesRows = ({
+  gaExpensesData,
+}: {
+  gaExpensesData: GA_ExpensesResponseType;
+}) => {
+  return gaExpensesData.map((data) => {
+    return {
+      key1: data["GENERAL & ADMINISTRATIVE EXPENSES"],
+      key2: data[2019] ?? "NA",
+      key3: data[2020] ?? "NA",
+      key4: data[2021] ?? "NA",
+      key5: data[2022] ?? "NA",
+      key6: data[2023] ?? "NA",
+      key7: data[2024] ?? "NA",
+      key8: data[2025] ?? "NA",
+      key9: data[2026] ?? "NA",
+      key10: data[2027] ?? "NA",
+      key11: data[2028] ?? "NA",
+    };
+  });
+};
+export const getMappedSM_ExpensesRows = ({
+  smExpensesData,
+}: {
+  smExpensesData: SM_ExpensesResponseType;
+}) => {
+  return smExpensesData.map((data) => {
+    return {
+      key1: data["SELLING & MARKETING EXPENSES"],
+      key2: data[2019] ?? "NA",
+      key3: data[2020] ?? "NA",
+      key4: data[2021] ?? "NA",
+      key5: data[2022] ?? "NA",
+      key6: data[2023] ?? "NA",
+      key7: data[2024] ?? "NA",
+      key8: data[2025] ?? "NA",
+      key9: data[2026] ?? "NA",
+      key10: data[2027] ?? "NA",
+      key11: data[2028] ?? "NA",
+    };
+  });
+};
+
+export const getMappedGA_AssumptionRows = ({
+  assumptionData,
+  selectedKeyIndex,
+  onChange,
+  onTextChange,
+  onEditClick,
+  onSaveClick,
+}: {
+  assumptionData: GA_AssumptionResponseTypeArray;
+  selectedKeyIndex: {
+    index: number;
+    key: keyof GA_AssumptionResponseType;
+  } | null;
+  onTextChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+    keyName: keyof GA_AssumptionResponseType
+  ) => void;
+  onEditClick: (
+    selectedIndex: number,
+    selectedKey: keyof GA_AssumptionResponseType
+  ) => void;
+  onSaveClick: () => void;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>, index: number) => void;
+}) => {
+  const uniqueData = removeDuplicateGA_AssumptionData(assumptionData);
+  const currentYear = new Date().getFullYear();
+  return uniqueData.map((data) => {
+    const map: { [x: string]: string | number | boolean | {} } = {
+      0: data.COMPONENT,
+      1: {
+        displayType: "select",
+        defaultValue: data.BASE,
+        onChange: onChange,
+      },
+    };
+    Object.keys(data)
+      .filter((key) => /^\d+$/.test(key))
+      .forEach((keyData) => {
+        const key: keyof GA_AssumptionResponseType =
+          keyData as keyof GA_AssumptionResponseType;
+        if (Number(key) >= currentYear) {
+          map[key] = {
+            data: data[key as keyof GA_AssumptionResponseType],
+            onTextChange: onTextChange,
+            onEditClick: onEditClick,
+            onSaveClick: onSaveClick,
+            selectedKeyIndex: selectedKeyIndex,
+          };
+        } else {
+          map[key] = Number(
+            data[key as keyof GA_AssumptionResponseType]
+          ).toPrecision(2);
+        }
+      });
+    return map;
+  });
+};
+
+export const getMappedSM_AssumptionRows = ({
+  assumptionData,
+  selectedKeyIndex,
+  onChange,
+  onTextChange,
+  onEditClick,
+  onSaveClick,
+}: {
+  assumptionData: SM_AssumptionResponseTypeArray;
+  selectedKeyIndex: {
+    index: number;
+    key: keyof SM_AssumptionResponseType;
+  } | null;
+  onTextChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+    keyName: keyof SM_AssumptionResponseType
+  ) => void;
+  onEditClick: (
+    selectedIndex: number,
+    selectedKey: keyof SM_AssumptionResponseType
+  ) => void;
+  onSaveClick: () => void;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>, index: number) => void;
+}) => {
+  const uniqueData = removeDuplicateSM_AssumptionData(assumptionData);
+  const currentYear = new Date().getFullYear();
+  return uniqueData.map((data) => {
+    const map: { [x: string]: string | number | boolean | {} } = {
+      0: data.COMPONENT,
+      1: {
+        displayType: "select",
+        defaultValue: data.BASE,
+        onChange: onChange,
+      },
+    };
+    Object.keys(data)
+      .filter((key) => /^\d+$/.test(key))
+      .forEach((keyData) => {
+        const key: keyof SM_AssumptionResponseType =
+          keyData as keyof SM_AssumptionResponseType;
+        if (Number(key) >= currentYear) {
+          map[key] = {
+            data: data[key as keyof SM_AssumptionResponseType],
+            onTextChange: onTextChange,
+            onEditClick: onEditClick,
+            onSaveClick: onSaveClick,
+            selectedKeyIndex: selectedKeyIndex,
+          };
+        } else {
+          map[key] = Number(
+            data[key as keyof SM_AssumptionResponseType]
+          ).toPrecision(2);
+        }
+      });
+    return map;
+  });
+};
 export const getMappedIs_CRNT_Rows = (Is_CRNTData: Is_CRNT_ResponseType) => {
   return Is_CRNTData.map((data) => {
     return {
@@ -262,21 +553,7 @@ export const getMappedIs_CRNT_Rows = (Is_CRNTData: Is_CRNT_ResponseType) => {
     };
   });
 };
-export const getMappedWorkingCapitalIndicatorRows = (
-  workingCapitalData: WorkingCapitalIndicatorsResponseTypeArray
-) => {
-  return workingCapitalData.map((data) => {
-    return {
-      key1: data.SAR,
-      key2: data.Notes,
-      key3: data[2019],
-      key4: data[2020],
-      key5: data[2021],
-      key6: data[2022],
-      key7: data[2023],
-    };
-  });
-};
+
 export const getMappedWorrkingCapitalEditableRows = ({
   workingCapitalIndicatorsData,
   onTextChange,
@@ -347,15 +624,15 @@ export const getMappedFixedAssetRows = (
   return fixedAssetData.map((data) => {
     return {
       key1: data.FA,
-      key2: data[2019]?.toPrecision(2) ?? "NA",
-      key3: data[2020]?.toPrecision(2) ?? "NA",
-      key4: data[2021]?.toPrecision(2) ?? "NA",
-      key5: data[2022]?.toPrecision(2) ?? "NA",
-      key6: data[2023]?.toPrecision(2) ?? "NA",
-      key7: data[2024]?.toPrecision(2) ?? "NA",
-      key8: data[2025]?.toPrecision(2) ?? "NA",
-      key9: data[2026]?.toPrecision(2) ?? "NA",
-      key10: data[2027]?.toPrecision(2) ?? "NA",
+      key2: data[2019] ?? "NA",
+      key3: data[2020] ?? "NA",
+      key4: data[2021] ?? "NA",
+      key5: data[2022] ?? "NA",
+      key6: data[2023] ?? "NA",
+      key7: data[2024] ?? "NA",
+      key8: data[2025] ?? "NA",
+      key9: data[2026] ?? "NA",
+      key10: data[2027] ?? "NA",
     };
   });
 };
@@ -366,15 +643,15 @@ export const getMappedBalanceSheetRows = (
   return balanceSheetData.map((data) => {
     return {
       key1: data["BALANCE SHEET"],
-      key2: data[2019]?.toPrecision(2) ?? "NA",
-      key3: data[2020]?.toPrecision(2) ?? "NA",
-      key4: data[2021]?.toPrecision(2) ?? "NA",
-      key5: data[2022]?.toPrecision(2) ?? "NA",
-      key6: data[2023]?.toPrecision(2) ?? "NA",
-      key7: data[2024]?.toPrecision(2) ?? "NA",
-      key8: data[2025]?.toPrecision(2) ?? "NA",
-      key9: data[2026]?.toPrecision(2) ?? "NA",
-      key10: data[2027]?.toPrecision(2) ?? "NA",
+      key2: data[2019] ?? "NA",
+      key3: data[2020] ?? "NA",
+      key4: data[2021] ?? "NA",
+      key5: data[2022] ?? "NA",
+      key6: data[2023] ?? "NA",
+      key7: data[2024] ?? "NA",
+      key8: data[2025] ?? "NA",
+      key9: data[2026] ?? "NA",
+      key10: data[2027] ?? "NA",
     };
   });
 };
@@ -387,15 +664,15 @@ export const getMappedDebtRows = ({
   return debtData.map((data) => {
     return {
       key1: data.DEBT,
-      key2: data[2019]?.toPrecision(2) ?? "NA",
-      key3: data[2020]?.toPrecision(2) ?? "NA",
-      key4: data[2021]?.toPrecision(2) ?? "NA",
-      key5: data[2022]?.toPrecision(2) ?? "NA",
-      key6: data[2023]?.toPrecision(2) ?? "NA",
-      key7: data[2024]?.toPrecision(2) ?? "NA",
-      key8: data[2025]?.toPrecision(2) ?? "NA",
-      key9: data[2026]?.toPrecision(2) ?? "NA",
-      key10: data[2027]?.toPrecision(2) ?? "NA",
+      key2: data[2019] ?? "NA",
+      key3: data[2020] ?? "NA",
+      key4: data[2021] ?? "NA",
+      key5: data[2022] ?? "NA",
+      key6: data[2023] ?? "NA",
+      key7: data[2024] ?? "NA",
+      key8: data[2025] ?? "NA",
+      key9: data[2026] ?? "NA",
+      key10: data[2027] ?? "NA",
     };
   });
 };
@@ -407,15 +684,15 @@ export const getMappedEquityRows = ({
   return equityData.map((data) => {
     return {
       key1: data.EQUITY,
-      key2: data[2019]?.toPrecision(2) ?? "NA",
-      key3: data[2020]?.toPrecision(2) ?? "NA",
-      key4: data[2021]?.toPrecision(2) ?? "NA",
-      key5: data[2022]?.toPrecision(2) ?? "NA",
-      key6: data[2023]?.toPrecision(2) ?? "NA",
-      key7: data[2024]?.toPrecision(2) ?? "NA",
-      key8: data[2025]?.toPrecision(2) ?? "NA",
-      key9: data[2026]?.toPrecision(2) ?? "NA",
-      key10: data[2027]?.toPrecision(2) ?? "NA",
+      key2: data[2019] ?? "NA",
+      key3: data[2020] ?? "NA",
+      key4: data[2021] ?? "NA",
+      key5: data[2022] ?? "NA",
+      key6: data[2023] ?? "NA",
+      key7: data[2024] ?? "NA",
+      key8: data[2025] ?? "NA",
+      key9: data[2026] ?? "NA",
+      key10: data[2027] ?? "NA",
     };
   });
 };

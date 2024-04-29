@@ -8,6 +8,10 @@ import {
   FixedAssetResponseType,
   BalanceSheetResponseType,
   WorkingCapitalIndicatorsResponseTypeArray,
+  GA_ExpensesResponseType,
+  GA_AssumptionResponseTypeArray,
+  SM_ExpensesResponseType,
+  SM_AssumptionResponseTypeArray,
 } from "../types/FinancesType";
 import { get, post } from "./axios";
 import { GET_ROUTES, POST_ROUTES } from "./apiRoutes";
@@ -25,6 +29,62 @@ export const useGetFinances = () => {
   return useQuery({
     queryKey: [GET_ROUTES.assumption_data],
     queryFn: () => getFinances(),
+  });
+};
+
+export const getGA_Assumption = async () => {
+  return await get<GA_AssumptionResponseTypeArray>(GET_ROUTES.ga_assumption);
+};
+
+export const useGetGA_Assumption = () => {
+  return useQuery({
+    queryKey: [GET_ROUTES.ga_assumption],
+    queryFn: () => getGA_Assumption(),
+  });
+};
+
+export const postGAExpenses = async (
+  df_assumption: GA_AssumptionResponseTypeArray
+) => {
+  const res = await post<GA_ExpensesResponseType>(POST_ROUTES.ga_expenses, {
+    df_assumption: df_assumption,
+  });
+  return res;
+};
+
+export const usePostGAExpenses = () => {
+  return useMutation({
+    mutationKey: [POST_ROUTES.ga_expenses],
+    mutationFn: (df_assumption: GA_AssumptionResponseTypeArray) =>
+      postGAExpenses(df_assumption),
+  });
+};
+
+export const getSM_Assumption = async () => {
+  return await get<SM_AssumptionResponseTypeArray>(GET_ROUTES.sm_assumption);
+};
+
+export const useGetSM_Assumption = () => {
+  return useQuery({
+    queryKey: [GET_ROUTES.sm_assumption],
+    queryFn: () => getSM_Assumption(),
+  });
+};
+
+export const postSMExpenses = async (
+  df_assumption: SM_AssumptionResponseTypeArray
+) => {
+  const res = await post<SM_ExpensesResponseType>(POST_ROUTES.sm_expenses, {
+    df_assumption: df_assumption,
+  });
+  return res;
+};
+
+export const usePostSMExpenses = () => {
+  return useMutation({
+    mutationKey: [POST_ROUTES.sm_expenses],
+    mutationFn: (df_assumption: SM_AssumptionResponseTypeArray) =>
+      postSMExpenses(df_assumption),
   });
 };
 
@@ -98,8 +158,6 @@ export const postBalanceSheet = async (
   const res = await post<BalanceSheetResponseType>(POST_ROUTES.BalanceSheet, {
     workingCapital: [
       {
-        "SAR ": "Trade receivables",
-        "Notes ": "Sales",
         "2019": 22962376,
         "2020": 15101882,
         "2021": 45471210,
@@ -109,10 +167,10 @@ export const postBalanceSheet = async (
         "2025": 30916091.5369577855,
         "2026": 32771057.0291752554,
         "2027": 34737320.4509257749,
+        SAR: "Trade receivables",
+        Notes: "Sales",
       },
       {
-        "SAR ": "Due from related parties",
-        "Notes ": "Sales",
         "2019": 35490307,
         "2020": 53628084,
         "2021": 53587438,
@@ -122,10 +180,10 @@ export const postBalanceSheet = async (
         "2025": 54219636.463375397,
         "2026": 57472814.6511779279,
         "2027": 60921183.5302486122,
+        SAR: "Due from related parties",
+        Notes: "Sales",
       },
       {
-        SAR: "Inventories",
-        Notes: "COGS",
         "2019": 7828942,
         "2020": 2857376,
         "2021": 8384088,
@@ -135,10 +193,10 @@ export const postBalanceSheet = async (
         "2025": 5198944.8554621199,
         "2026": -7018575.5548738623,
         "2027": 9475076.9990797155,
+        SAR: "Inventories",
+        Notes: "COGS",
       },
       {
-        SAR: "Prepayments and other receivables",
-        Notes: "COGS",
         "2019": 2066640,
         "2020": 3617257,
         "2021": 3810333,
@@ -148,10 +206,10 @@ export const postBalanceSheet = async (
         "2025": 5671972.1886456609,
         "2026": -7657162.4546716427,
         "2027": 10337169.3138067182,
+        SAR: "Prepayments and other receivables",
+        Notes: "COGS",
       },
       {
-        SAR: "Trade payables",
-        Notes: "COGS",
         "2019": -20821238,
         "2020": -26835169,
         "2021": -31992027,
@@ -161,10 +219,10 @@ export const postBalanceSheet = async (
         "2025": -9353712.0318359379,
         "2026": 12627511.242978517,
         "2027": -17047140.1780209988,
+        SAR: "Trade payables",
+        Notes: "COGS",
       },
       {
-        SAR: "Accrued expenses and other liabilities",
-        Notes: "COGS",
         "2019": -14278662,
         "2020": -20979376,
         "2021": -27350693,
@@ -174,10 +232,10 @@ export const postBalanceSheet = async (
         "2025": -14820242.6877445038,
         "2026": 20007327.6284550801,
         "2027": -27009892.2984143645,
+        SAR: "Accrued expenses and other liabilities",
+        Notes: "COGS",
       },
       {
-        SAR: "Due to related parties",
-        Notes: "Sales",
         "2019": -228582,
         "2020": -6037582,
         "2021": -105888084,
@@ -187,10 +245,10 @@ export const postBalanceSheet = async (
         "2025": -44338583.1772729531,
         "2026": -46998898.1679093316,
         "2027": -49818832.0579838976,
+        SAR: "Due to related parties",
+        Notes: "Sales",
       },
       {
-        SAR: "Zakat payable",
-        Notes: null,
         "2019": -367704,
         "2020": -966901,
         "2021": 0,
@@ -200,11 +258,12 @@ export const postBalanceSheet = async (
         "2025": 0.0,
         "2026": 0.0,
         "2027": 0.0,
+        SAR: "Zakat payable",
+        Notes: null,
       },
     ],
     debt: [
       {
-        DEBT: "Opening balance",
         "2019": 20356448,
         "2020": 8000000,
         "2021": 1999967,
@@ -214,9 +273,9 @@ export const postBalanceSheet = async (
         "2025": 1800546,
         "2026": 1800546,
         "2027": 1800546,
+        DEBT: "Opening balance",
       },
       {
-        DEBT: "Loan proceeds - net",
         "2019": 0,
         "2020": 0,
         "2021": 1503374,
@@ -226,9 +285,9 @@ export const postBalanceSheet = async (
         "2025": 0,
         "2026": 0,
         "2027": 0,
+        DEBT: "Loan proceeds - net",
       },
       {
-        DEBT: "Repayments - net",
         "2019": -12356448,
         "2020": -6000033,
         "2021": 0,
@@ -238,9 +297,9 @@ export const postBalanceSheet = async (
         "2025": 0,
         "2026": 0,
         "2027": 0,
+        DEBT: "Repayments - net",
       },
       {
-        DEBT: "Closing Balance",
         "2019": 8000000,
         "2020": 1999967,
         "2021": 3503341,
@@ -250,11 +309,11 @@ export const postBalanceSheet = async (
         "2025": 1800546,
         "2026": 1800546,
         "2027": 1800546,
+        DEBT: "Closing Balance",
       },
     ],
     fixedAsset: [
       {
-        FA: "Opening balance - NBV",
         "2019": 807959,
         "2020": 691950,
         "2021": 657985,
@@ -264,9 +323,9 @@ export const postBalanceSheet = async (
         "2025": 577677,
         "2026": 577677,
         "2027": 577677,
+        FA: "Opening balance - NBV",
       },
       {
-        FA: "Additions during the year - net",
         "2019": 62245,
         "2020": 91964,
         "2021": 132718,
@@ -276,9 +335,9 @@ export const postBalanceSheet = async (
         "2025": 69321.24,
         "2026": 69321.24,
         "2027": 69321.24,
+        FA: "Additions during the year - net",
       },
       {
-        FA: "Depreciation charge for the year",
         "2019": -178254,
         "2020": -125929,
         "2021": -116021,
@@ -288,9 +347,9 @@ export const postBalanceSheet = async (
         "2025": 73480.5144,
         "2026": 73480.5144,
         "2027": 73480.5144,
+        FA: "Depreciation charge for the year",
       },
       {
-        FA: "Closing Balance - NBV",
         "2019": 691950,
         "2020": 657985,
         "2021": 674682,
@@ -300,11 +359,11 @@ export const postBalanceSheet = async (
         "2025": 720478.7544,
         "2026": 720478.7544,
         "2027": 720478.7544,
+        FA: "Closing Balance - NBV",
       },
     ],
     equity: [
       {
-        EQUITY: "Share capital",
         "2019": 2000000,
         "2020": 2000000,
         "2021": 2000000,
@@ -314,9 +373,9 @@ export const postBalanceSheet = async (
         "2025": 2000000,
         "2026": 2000000,
         "2027": 2000000,
+        EQUITY: "Share capital",
       },
       {
-        EQUITY: "Statutory reserve",
         "2019": 1000000,
         "2020": 1000000,
         "2021": 1000000,
@@ -326,9 +385,9 @@ export const postBalanceSheet = async (
         "2025": 1000000,
         "2026": 1000000,
         "2027": 1000000,
+        EQUITY: "Statutory reserve",
       },
       {
-        EQUITY: "Retained earnings",
         "2019": 5949282,
         "2020": 23887235,
         "2021": 18416305,
@@ -338,9 +397,9 @@ export const postBalanceSheet = async (
         "2025": 6093653,
         "2026": 6093653,
         "2027": 6093653,
+        EQUITY: "Retained earnings",
       },
       {
-        EQUITY: "Closing balance - Equity",
         "2019": 8949282,
         "2020": 26887235,
         "2021": 21416305,
@@ -350,33 +409,33 @@ export const postBalanceSheet = async (
         "2025": 9093653,
         "2026": 9093653,
         "2027": 9093653,
+        EQUITY: "Closing balance - Equity",
       },
       {
+        "2019": 2000000,
+        "2020": 2000000,
+        "2021": 2000000,
+        "2022": 2000000,
+        "2023": 2000000,
+        "2024": 2000000,
+        "2025": 2000000,
+        "2026": 2000000,
+        "2027": 2000000,
         EQUITY: "Opening balance - SHARE CAPITAL",
-        "2019": 2000000,
-        "2020": 2000000,
-        "2021": 2000000,
-        "2022": 2000000,
-        "2023": 2000000,
-        "2024": 2000000,
-        "2025": 2000000,
-        "2026": 2000000,
-        "2027": 2000000,
       },
       {
+        "2019": 0,
+        "2020": 0,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 0,
+        "2026": 0,
+        "2027": 0,
         EQUITY: "Capital increase/decrease",
-        "2019": 0,
-        "2020": 0,
-        "2021": 0,
-        "2022": 0,
-        "2023": 0,
-        "2024": 0,
-        "2025": 0,
-        "2026": 0,
-        "2027": 0,
       },
       {
-        EQUITY: "Closing balance - SHARE CAPITAL",
         "2019": 2000000,
         "2020": 2000000,
         "2021": 2000000,
@@ -386,9 +445,9 @@ export const postBalanceSheet = async (
         "2025": 2000000,
         "2026": 2000000,
         "2027": 2000000,
+        EQUITY: "Closing balance - SHARE CAPITAL",
       },
       {
-        EQUITY: "Opening balance - STATUTORY RESERVE",
         "2019": 1000000,
         "2020": 1000000,
         "2021": 1000000,
@@ -398,9 +457,9 @@ export const postBalanceSheet = async (
         "2025": 1000000,
         "2026": 1000000,
         "2027": 1000000,
+        EQUITY: "Opening balance - STATUTORY RESERVE",
       },
       {
-        EQUITY: "Transfer for the year",
         "2019": 0,
         "2020": 0,
         "2021": 0,
@@ -410,9 +469,9 @@ export const postBalanceSheet = async (
         "2025": 0,
         "2026": 0,
         "2027": 0,
+        EQUITY: "Transfer for the year",
       },
       {
-        EQUITY: "Closing balance - STATUTORY RESERVE",
         "2019": 1000000,
         "2020": 1000000,
         "2021": 1000000,
@@ -422,9 +481,9 @@ export const postBalanceSheet = async (
         "2025": 1000000,
         "2026": 1000000,
         "2027": 1000000,
+        EQUITY: "Closing balance - STATUTORY RESERVE",
       },
       {
-        EQUITY: "Opening balance - RETAINED EARNINGS",
         "2019": 2746783,
         "2020": 5949282,
         "2021": 23887235,
@@ -434,9 +493,9 @@ export const postBalanceSheet = async (
         "2025": 6093653,
         "2026": 6093653,
         "2027": 6093653,
+        EQUITY: "Opening balance - RETAINED EARNINGS",
       },
       {
-        EQUITY: "Net income",
         "2019": -39435,
         "2020": 14313165,
         "2021": -5470930,
@@ -446,9 +505,9 @@ export const postBalanceSheet = async (
         "2025": 0,
         "2026": 0,
         "2027": 0,
+        EQUITY: "Net income",
       },
       {
-        EQUITY: "Dividends & OCI movement",
         "2019": 3241934,
         "2020": 3624788,
         "2021": 0,
@@ -458,9 +517,9 @@ export const postBalanceSheet = async (
         "2025": 0,
         "2026": 0,
         "2027": 0,
+        EQUITY: "Dividends & OCI movement",
       },
       {
-        EQUITY: "Statutory reserve transfer",
         "2019": 0,
         "2020": 0,
         "2021": 0,
@@ -470,9 +529,9 @@ export const postBalanceSheet = async (
         "2025": 0,
         "2026": 0,
         "2027": 0,
+        EQUITY: "Statutory reserve transfer",
       },
       {
-        EQUITY: "Closing balance - RETAINED EARNINGS",
         "2019": 5949282,
         "2020": 23887235,
         "2021": 18416305,
@@ -482,6 +541,7 @@ export const postBalanceSheet = async (
         "2025": 6093653,
         "2026": 6093653,
         "2027": 6093653,
+        EQUITY: "Closing balance - RETAINED EARNINGS",
       },
     ],
   });

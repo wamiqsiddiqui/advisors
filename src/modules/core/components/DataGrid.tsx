@@ -125,9 +125,7 @@ const DataGrid = ({ columns, rows }: DataGridProps) => {
                           className="bg-transparent py-0 px-2 w-16"
                           placeholder="year"
                           defaultValue={
-                            rowData?.data
-                              ? Number(rowData.data).toPrecision(1)
-                              : undefined
+                            rowData?.data ? Number(rowData.data) : undefined
                           }
                           onChange={(
                             e: React.ChangeEvent<HTMLInputElement>
@@ -146,7 +144,7 @@ const DataGrid = ({ columns, rows }: DataGridProps) => {
                       </div>
                     ) : (
                       <div className="flex justify-center items-center">
-                        <p>{Number(rowData.data).toPrecision(1)}</p>
+                        <p>{Number(rowData.data)}</p>
                         {rowData.selectedKeyIndex === null && (
                           <MdEdit
                             onClick={() =>

@@ -69,6 +69,10 @@ const WorkingCapital = ({
 
   return (
     <div>
+      <p className="text-3xl font-normal text-start mb-4">
+        Working Capital Key Indicators:
+      </p>
+
       {isIndicatorsPending ? (
         <LoadingDataGrid columns={workingCapitalIndicatorsDataColumns} />
       ) : workingCapitalIndicatorsData &&
