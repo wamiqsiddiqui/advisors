@@ -1,28 +1,28 @@
 import { useEffect, useState } from "react";
-import { usePostBalanceSheet } from "../../../../services/finances";
+import { usePostFixedAsset } from "../../../../services/finances";
 import DataGrid from "../../../core/components/DataGrid";
 import LoadingDataGrid from "../../../core/components/Loaders/LoadingDataGrid";
 import {
-  balanceSheetDataColumns,
-  getMappedBalanceSheetRows,
-} from "./FunctionsAndConstants";
-import { WorkingCapitalResponseType } from "../../../../types/FinancesType";
+  fixedAssetDataColumns,
+  getMappedFixedAssetRows,
+} from "../Categories/FunctionsAndConstants";
+import { AssumptionResponseType } from "../../../../types/FinancesType";
 import CustomButton from "../../../core/components/CustomButton";
 import { ToggleValue } from "../../../../types/generalTypes";
 
-const BalanceSheet = ({
-  workingCapitalData,
+const FixedAssetLayout = ({
+  df_assumption,
 }: {
-  workingCapitalData: WorkingCapitalResponseType;
+  df_assumption: AssumptionResponseType[];
 }) => {
   const {
-    mutate: postBalanceSheet,
-    data: balanceSheetData,
+    mutate: postFixedAsset,
+    data: fixedAssetData,
     isPending,
     isError,
-  } = usePostBalanceSheet();
+  } = usePostFixedAsset();
   useEffect(() => {
-    postBalanceSheet(workingCapitalData);
+    postFixedAsset(df_assumption);
   }, []);
   const [expensesToggle, setToggle] = useState<ToggleValue>("Absolute");
 
@@ -30,7 +30,7 @@ const BalanceSheet = ({
     <div>
       <div className="flex justify-between py-4">
         <p className="text-3xl font-normal text-start mb-4">
-          Balance Sheet Actual Data
+          Fixed Asset Actual Data
         </p>
         <div className="flex gap-3">
           <CustomButton
@@ -53,14 +53,11 @@ const BalanceSheet = ({
         </div>
       </div>
       {isPending ? (
-        <LoadingDataGrid columns={balanceSheetDataColumns} />
-      ) : balanceSheetData && balanceSheetData.data.length > 0 ? (
+        <LoadingDataGrid columns={fixedAssetDataColumns} />
+      ) : fixedAssetData && fixedAssetData.data.length > 0 ? (
         <DataGrid
-          columns={balanceSheetDataColumns}
-          rows={getMappedBalanceSheetRows(
-            balanceSheetData.data,
-            expensesToggle
-          )}
+          columns={fixedAssetDataColumns}
+          rows={getMappedFixedAssetRows(fixedAssetData.data, expensesToggle)}
         />
       ) : (
         <>No Record Found!</>
@@ -69,4 +66,4 @@ const BalanceSheet = ({
   );
 };
 
-export default BalanceSheet;
+export default FixedAssetLayout;

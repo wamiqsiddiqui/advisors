@@ -15,6 +15,19 @@ import {
 } from "../types/FinancesType";
 import { get, post } from "./axios";
 import { GET_ROUTES, POST_ROUTES } from "./apiRoutes";
+import {
+  GA_AnnualGrowthRequestType,
+  GA_AnnualGrowthResponseType,
+  GA_IndicatorsResponseType,
+  GA_KeyIndicatorRequestType,
+  GA_PercentageOfRevenueResponse,
+  SM_IndicatorsResponseType,
+} from "../types/GATypes";
+import {
+  SM_AnnualGrowthRequestType,
+  SM_KeyIndicatorRequestType,
+  SM_PercentageOfRevenueResponse,
+} from "../types/SMTypes";
 
 export const getFinances = async () => {
   const res = await get<AssumptionResponseType[]>(GET_ROUTES.assumption_data);
@@ -40,6 +53,106 @@ export const useGetGA_Assumption = () => {
   return useQuery({
     queryKey: [GET_ROUTES.ga_assumption],
     queryFn: () => getGA_Assumption(),
+  });
+};
+export const postGAKeyIndicator = async (
+  df_assumption: GA_KeyIndicatorRequestType
+) => {
+  const res = await post<GA_IndicatorsResponseType>(
+    POST_ROUTES.ga_key_indicator,
+    df_assumption
+  );
+  return res;
+};
+export const usePostGAKeyIndicator = () => {
+  return useMutation({
+    mutationKey: [POST_ROUTES.ga_key_indicator],
+    mutationFn: (df_assumption: GA_KeyIndicatorRequestType) =>
+      postGAKeyIndicator(df_assumption),
+  });
+};
+export const postGAAnnualGrowth = async (
+  df_assumption: GA_AnnualGrowthRequestType
+) => {
+  const res = await post<GA_AnnualGrowthResponseType>(
+    POST_ROUTES.ga_annual_growth,
+    df_assumption
+  );
+  return res;
+};
+export const usePostGAAnnualGrowth = () => {
+  return useMutation({
+    mutationKey: [POST_ROUTES.ga_annual_growth],
+    mutationFn: (df_assumption: GA_AnnualGrowthRequestType) =>
+      postGAAnnualGrowth(df_assumption),
+  });
+};
+
+export const postGAPercentageOfRevenue = async (
+  df_assumption: GA_KeyIndicatorRequestType
+) => {
+  const res = await post<GA_PercentageOfRevenueResponse>(
+    POST_ROUTES.get_ga_per_of_rev,
+    df_assumption
+  );
+  return res;
+};
+export const usePostGAPercentageOfRevenue = () => {
+  return useMutation({
+    mutationKey: [POST_ROUTES.get_ga_per_of_rev],
+    mutationFn: (df_assumption: GA_KeyIndicatorRequestType) =>
+      postGAPercentageOfRevenue(df_assumption),
+  });
+};
+
+export const postSMKeyIndicator = async (
+  df_assumption: SM_KeyIndicatorRequestType
+) => {
+  const res = await post<SM_IndicatorsResponseType>(
+    POST_ROUTES.sm_key_indicator,
+    df_assumption
+  );
+  return res;
+};
+export const usePostSMKeyIndicator = () => {
+  return useMutation({
+    mutationKey: [POST_ROUTES.sm_key_indicator],
+    mutationFn: (df_assumption: SM_KeyIndicatorRequestType) =>
+      postSMKeyIndicator(df_assumption),
+  });
+};
+
+export const postSMAnnualGrowth = async (
+  df_assumption: SM_AnnualGrowthRequestType
+) => {
+  const res = await post<GA_AnnualGrowthResponseType>(
+    POST_ROUTES.sm_annual_growth,
+    df_assumption
+  );
+  return res;
+};
+export const usePostSMAnnualGrowth = () => {
+  return useMutation({
+    mutationKey: [POST_ROUTES.sm_annual_growth],
+    mutationFn: (df_assumption: SM_AnnualGrowthRequestType) =>
+      postSMAnnualGrowth(df_assumption),
+  });
+};
+
+export const postSMPercentageOfRevenue = async (
+  df_assumption: SM_KeyIndicatorRequestType
+) => {
+  const res = await post<SM_PercentageOfRevenueResponse>(
+    POST_ROUTES.sm_per_of_rev,
+    df_assumption
+  );
+  return res;
+};
+export const usePostSMPercentageOfRevenue = () => {
+  return useMutation({
+    mutationKey: [POST_ROUTES.sm_per_of_rev],
+    mutationFn: (df_assumption: SM_KeyIndicatorRequestType) =>
+      postSMPercentageOfRevenue(df_assumption),
   });
 };
 

@@ -28,8 +28,8 @@ const CustomTabs = ({ tabTitles, tabChildren }: CustomTabsProps) => {
             }}
             className={`${
               selectedTab === index
-                ? "bg-neoShades-sidebarSelectedBlue"
-                : "bg-neoShades-innerComponentsGray"
+                ? "bg-neoShades-innerComponentsGray"
+                : "bg-neoShades-sidebarBlack"
             } p-6 mr-2 cursor-pointer`}
           >
             {tab}
@@ -43,7 +43,7 @@ const CustomTabs = ({ tabTitles, tabChildren }: CustomTabsProps) => {
             className={`shrink-0 w-full transition-all duration-1000 h-max `}
           >
             <div
-              className={`bg-neoShades-sidebarSelectedBlue min-h-24 p-6 ${
+              className={`bg-neoShades-sidebarBlack min-h-24 p-6 ${
                 selectedDelayedTab !== index && "h-24"
               }`}
             >

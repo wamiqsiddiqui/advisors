@@ -21,12 +21,15 @@ import {
 } from "./FunctionsAndConstants";
 import CustomTabs from "../../../core/components/CustomTabs";
 import WorkingCapital from "./WorkingCapital";
-import Debt from "./Debt";
-import Equity from "./Equity";
-import FixedAsset from "./FixedAsset";
+import DebtLayout from "../Debt/DebtLayout";
+import EquityLayout from "../Equity/EquityLayout";
+import FixedAssetLayout from "../FixedAsset/FixedAssetLayout";
 import BalanceSheet from "./BalanceSheet";
 import GA_Expenses from "./GA_Expenses";
 import SM_Expenses from "./SM_Expenses";
+import CustomButton from "../../../core/components/CustomButton";
+import { ToggleValue } from "../../../../types/generalTypes";
+import { localStorageKeys } from "../../../../utilities/localStorageKeys";
 
 const CategoriesLayout = () => {
   const { data: assumptionData, isLoading, isError } = useGetFinances();
@@ -39,28 +42,43 @@ const CategoriesLayout = () => {
   const [workingCapitalData, setWorkingCapitalData] = useState<
     WorkingCapitalResponseType | undefined
   >();
+  const [expensesToggle, setToggle] = useState<ToggleValue>("Absolute");
   useEffect(() => {
-    if (assumptionData?.data && !calculatedOnce) {
-      setCalculatedOnce(true);
-      mutateAssumptions(
-        assumptionData.data.map((data) => {
-          return {
-            COMPONENT: data.COMPONENT,
-            BASE: data.BASE,
-            Select: data.Select,
-            "2018": data[2018],
-            "2019": data[2019],
-            "2020": data[2020],
-            "2021": data[2021],
-            "2022": data[2022],
-            "2023": data[2023],
-            "2024": data[2024],
-            "2025": data[2025],
-            "2026": data[2026],
-            "2027": data[2027],
-          };
-        })
+    if (is_crntData?.data) {
+      localStorage.setItem(
+        localStorageKeys.is_crntData,
+        JSON.stringify(is_crntData.data)
       );
+    }
+  }, [is_crntData]);
+  useEffect(() => {
+    if (assumptionData?.data) {
+      localStorage.setItem(
+        localStorageKeys.assumptionData,
+        JSON.stringify(assumptionData.data)
+      );
+      if (!calculatedOnce) {
+        setCalculatedOnce(true);
+        mutateAssumptions(
+          assumptionData.data.map((data) => {
+            return {
+              COMPONENT: data.COMPONENT,
+              BASE: data.BASE,
+              Select: data.Select,
+              "2018": data[2018],
+              "2019": data[2019],
+              "2020": data[2020],
+              "2021": data[2021],
+              "2022": data[2022],
+              "2023": data[2023],
+              "2024": data[2024],
+              "2025": data[2025],
+              "2026": data[2026],
+              "2027": data[2027],
+            };
+          })
+        );
+      }
     }
   }, [assumptionData?.data]);
   const [selectedKeyIndex, setSelectedKeyIndex] = useState<{
@@ -71,7 +89,7 @@ const CategoriesLayout = () => {
     AssumptionResponseType[] | null
   >(null);
   return (
-    <TitleBody title="Categories">
+    <TitleBody title="Assumption">
       <div className="rounded-xl p-1 bg-transparent">
         {isError ? (
           <>Something went wrong</>
@@ -164,7 +182,6 @@ const CategoriesLayout = () => {
         ) : (
           <>No Record Found!</>
         )}
-
         <CustomTabs
           tabTitles={[
             "Income Statement",
@@ -178,12 +195,37 @@ const CategoriesLayout = () => {
           ]}
           tabChildren={[
             <div>
+              <div className="flex justify-between my-4">
+                <p className="text-3xl font-normal text-start mb-4">
+                  Income Statement Actual Data
+                </p>
+                <div className="flex gap-3">
+                  <CustomButton
+                    width="w-28"
+                    text={"Absolute"}
+                    onClick={() => {
+                      setToggle("Absolute");
+                    }}
+                  />
+                  <CustomButton
+                    width="w-28"
+                    text={"Millions"}
+                    onClick={() => setToggle("Millions")}
+                  />
+                  <CustomButton
+                    width="w-28"
+                    text={"Thousands"}
+                    onClick={() => setToggle("Thousands")}
+                  />
+                </div>
+              </div>
+
               {isCalculatedAssumptionsLoading ? (
                 <LoadingDataGrid columns={calculatedAssumptionsColumns} />
               ) : is_crntData && is_crntData.data.length > 0 ? (
                 <DataGrid
                   columns={Is_CRNT_DataColumns}
-                  rows={getMappedIs_CRNT_Rows(is_crntData.data)}
+                  rows={getMappedIs_CRNT_Rows(is_crntData.data, expensesToggle)}
                 />
               ) : (
                 calculatedOnce && <>No Record Found!</>
@@ -201,12 +243,12 @@ const CategoriesLayout = () => {
             ) : (
               calculatedOnce && <>No Record Found!</>
             ),
-            <Debt />,
-            <Equity />,
+            <DebtLayout />,
+            <EquityLayout />,
             isLoading ? (
               <>Loading...</>
             ) : assumptionData && assumptionData.data.length > 0 ? (
-              <FixedAsset df_assumption={assumptionData.data} />
+              <FixedAssetLayout df_assumption={assumptionData.data} />
             ) : (
               <>No Record Found!</>
             ),

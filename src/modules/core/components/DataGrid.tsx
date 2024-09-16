@@ -7,20 +7,96 @@ type DataGridProps = {
   rows: { [key: string]: any }[];
 };
 const DataGrid = ({ columns, rows }: DataGridProps) => {
-  const currentYear = new Date().getFullYear();
+  const isActualOrForecast = (columnName: string) => {
+    const currentYear = new Date().getFullYear();
+    if (Number(columnName).toString() !== "NaN") {
+      if (Number(columnName) < currentYear) {
+        return "Actual";
+      } else {
+        return "Forecast";
+      }
+    }
+    return "Normal";
+  };
+  const getColumns = () => {
+    const currentYear = new Date().getFullYear();
+    const actualYears: string[] = [];
+    const forecastYears: string[] = [];
+    columns.forEach((column) => {
+      if (Number(column.name).toString() !== "NaN") {
+        if (Number(column.name) < currentYear) {
+          actualYears.push(column.name);
+        } else {
+          forecastYears.push(column.name);
+        }
+      }
+    });
+    return { actualYears: actualYears, forecastYears: forecastYears };
+  };
   return (
     <div className="w-full px-6 bg-neoShades-sidebarBlack overflow-x-auto adv__custom-scrollbar">
+      {/* <div className="flex w-full py-2">
+        <p className="flex-[2] bg-green-500">Actual</p>
+        <p className="flex-[2] bg-red-500">Forecast</p>
+      </div>
+       <tr>
+            <th rowSpan={2} colSpan={1}>
+              Client Name
+            </th>
+            <th rowSpan={2} colSpan={1}>
+              Date
+            </th>
+            <th rowSpan={1} colSpan={5}>
+              All Appointments
+            </th>
+            <th rowSpan={1} colSpan={3}>
+              Fulfilled Appointments
+            </th>
+          </tr>
+      */}
       <table className="w-full mb-10 mt-4">
-        <thead>
-          <tr className="">
-            {columns.map((column, index) => (
-              <th
-                key={column.name + index}
-                className={`pb-2 text-grayShades-gray text-base font-medium max-sm:w-[50%] w-[${column.minWidth}]`}
-              >
-                {column.name}
-              </th>
-            ))}
+        <thead className="">
+          <tr className="pb-2">
+            <th
+              colSpan={
+                columns.length -
+                (getColumns().actualYears.length +
+                  getColumns().forecastYears.length)
+              }
+              rowSpan={1}
+              className={`py-2 bg-transparent text-grayShades-gray text-base font-medium `}
+            ></th>
+            <th
+              colSpan={getColumns().actualYears.length}
+              rowSpan={1}
+              className={`py-2 bg-neoShades-sidebarBlack  border-t-neoShades-dashboardPanel3 border-t-[2px] text-neoShades-dashboardPanel3 text-base font-semibold `}
+            >
+              Actual
+            </th>
+            <th
+              colSpan={getColumns().forecastYears.length}
+              rowSpan={1}
+              className={`py-2 bg-neoShades-sidebarBlack border-t-neoShades-dashboardPanel4 border-t-[2px]  text-neoShades-dashboardPanel4 text-base font-semibold `}
+            >
+              Forecast
+            </th>
+          </tr>
+          <tr className="mt-2">
+            {columns.map((column, index) => {
+              return (
+                <th
+                  key={column.name + index}
+                  className={`pb-2 text-grayShades-gray text-base font-medium max-sm:w-[50%] w-[${
+                    column.minWidth
+                  }] ${index !== 0 && "columns-3"}`}
+                >
+                  <span className="flex flex-col">
+                    <span className={`w-full ${getColumns()}`}></span>
+                    {column.name}
+                  </span>
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
@@ -125,7 +201,11 @@ const DataGrid = ({ columns, rows }: DataGridProps) => {
                           className="bg-transparent py-0 px-2 w-16"
                           placeholder="year"
                           defaultValue={
-                            rowData?.data ? Number(rowData.data) : undefined
+                            rowData?.defaultValue
+                              ? Number(rowData.defaultValue)
+                              : rowData?.data
+                              ? Number(rowData.data)
+                              : undefined
                           }
                           onChange={(
                             e: React.ChangeEvent<HTMLInputElement>
@@ -144,7 +224,11 @@ const DataGrid = ({ columns, rows }: DataGridProps) => {
                       </div>
                     ) : (
                       <div className="flex justify-center items-center">
-                        <p>{Number(rowData.data)}</p>
+                        <p>
+                          {rowData.isPercentageData
+                            ? `${(Number(rowData.data) * 100).toPrecision(2)}%`
+                            : rowData.data}
+                        </p>
                         {rowData.selectedKeyIndex === null && (
                           <MdEdit
                             onClick={() =>

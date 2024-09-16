@@ -132,7 +132,7 @@ export type SM_AssumptionResponseType = {
 export type SM_AssumptionResponseTypeArray = SM_AssumptionResponseType[];
 
 export type SM_ExpensesResponseType = {
-  "SELLING & MARKETING EXPENSES": string;
+  "G&A": string;
   "2019": number;
   "2020": number;
   "2021": number;
@@ -162,7 +162,7 @@ export type GA_AssumptionResponseType = {
 export type GA_AssumptionResponseTypeArray = GA_AssumptionResponseType[];
 
 export type GA_ExpensesResponseType = {
-  "GENERAL & ADMINISTRATIVE EXPENSES": string;
+  "G&A": string;
   "2019": number;
   "2020": number;
   "2021": number;
