@@ -19,7 +19,7 @@ import {
   FaSitemap,
 } from "react-icons/fa";
 
-import { MdOutlineKeyboardArrowUp } from "react-icons/md";
+import { MdOutlineKeyboardArrowUp, MdEdit } from "react-icons/md";
 import { TfiServer, TfiArrowCircleLeft, TfiCommentAlt } from "react-icons/tfi";
 import { IoMdClose, IoIosArrowDropleftCircle } from "react-icons/io";
 
@@ -38,7 +38,7 @@ import {
 import { CiSearch } from "react-icons/ci";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { IoEye } from "react-icons/io5";
-import { IoMdEyeOff } from "react-icons/io";
+import { IoMdEyeOff, IoIosSend } from "react-icons/io";
 import { GoSignOut } from "react-icons/go";
 
 export {
@@ -79,4 +79,6 @@ export {
   FaSitemap,
   HiMenuAlt4,
   IoIosArrowDropleftCircle,
+  IoIosSend,
+  MdEdit,
 };

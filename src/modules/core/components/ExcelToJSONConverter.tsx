@@ -14,11 +14,6 @@ const ExcelToJsonConverter: React.FC = () => {
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-        console.log("file data = ", data);
-        console.log(
-          "json.stringify data = ",
-          JSON.stringify(jsonData, null, 2)
-        );
         setJsonData(data);
       };
       reader.readAsBinaryString(file);

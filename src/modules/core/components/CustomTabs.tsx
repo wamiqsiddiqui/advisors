@@ -17,7 +17,7 @@ const CustomTabs = ({ tabTitles, tabChildren }: CustomTabsProps) => {
   };
   return (
     <div className="flex flex-col mt-4 pb-10 w-full">
-      <div className="flex bg-grayShades-alternateGray pt-8 px-6">
+      <div className="flex bg-neoShades-sidebarBlack pt-8 px-6">
         {tabTitles.map((tab, index) => (
           <div
             onClick={() => {
@@ -28,8 +28,8 @@ const CustomTabs = ({ tabTitles, tabChildren }: CustomTabsProps) => {
             }}
             className={`${
               selectedTab === index
-                ? "bg-neoShades-dashboardPanel3"
-                : "bg-neoShades-innerComponentsGray"
+                ? "bg-neoShades-innerComponentsGray"
+                : "bg-neoShades-sidebarBlack"
             } p-6 mr-2 cursor-pointer`}
           >
             {tab}
@@ -43,7 +43,7 @@ const CustomTabs = ({ tabTitles, tabChildren }: CustomTabsProps) => {
             className={`shrink-0 w-full transition-all duration-1000 h-max `}
           >
             <div
-              className={`bg-neoShades-dashboardPanel3 min-h-24 p-6 ${
+              className={`bg-neoShades-sidebarBlack min-h-24 p-6 ${
                 selectedDelayedTab !== index && "h-24"
               }`}
             >

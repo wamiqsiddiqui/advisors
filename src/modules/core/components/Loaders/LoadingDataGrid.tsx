@@ -13,8 +13,6 @@ const LoadingDataGrid = ({ columns }: DataGridProps) => {
     }
     return obj;
   });
-  console.log("rows = ", rows);
-  console.log("rows = ", rows.length);
   return (
     <div className="w-full px-6 bg-[#272934] overflow-x-auto adv__custom-scrollbar">
       <table className="w-full mb-10 mt-4">

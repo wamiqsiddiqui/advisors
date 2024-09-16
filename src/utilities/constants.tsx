@@ -1,3 +1,4 @@
+import { PROJECT_ROUTES } from "../modules/projects/routes";
 import { SidebarItemType } from "../types/generalTypes";
 import {
   FaBicycle,
@@ -12,7 +13,6 @@ import {
   TfiServer,
   TiDropbox,
 } from "./icons";
-
 export const sidebarItems: SidebarItemType[] = [
   {
     name: "Dashboard",
@@ -33,6 +33,36 @@ export const sidebarItems: SidebarItemType[] = [
     name: "Client Listing",
     link: "categories",
     icon: <FaTags className="adv__icon" />,
+    subsection: [
+      {
+        subname: "Income Statement",
+        sublink: PROJECT_ROUTES.incomeStatement,
+      },
+      {
+        subname: "Working Capital",
+        sublink: PROJECT_ROUTES.workingCapital,
+      },
+      {
+        subname: "Debt",
+        sublink: PROJECT_ROUTES.debt,
+      },
+      {
+        subname: "Equity",
+        sublink: PROJECT_ROUTES.equity,
+      },
+      {
+        subname: "Fixed Asset",
+        sublink: PROJECT_ROUTES.fixedAsset,
+      },
+      {
+        subname: "Settings",
+        sublink: "categories",
+      },
+      {
+        subname: "Store Info",
+        sublink: "/system/storeInfo",
+      },
+    ],
   },
   {
     name: "Customers",

@@ -5,13 +5,7 @@ import {
 } from "../../../../services/finances";
 import DataGrid from "../../../core/components/DataGrid";
 import LoadingDataGrid from "../../../core/components/Loaders/LoadingDataGrid";
-import {
-  getMappedWorkingCapitalRows,
-  getMappedWorrkingCapitalEditableRows,
-  setIndicatorsObjKeyValue,
-  workingCapitalDataColumns,
-  workingCapitalIndicatorsDataColumns,
-} from "./FunctionsAndConstants";
+
 import {
   Is_CRNT_ResponseType,
   WorkingCapitalIndicatorsResponseType,
@@ -20,6 +14,13 @@ import {
 } from "../../../../types/FinancesType";
 import { ToggleValue } from "../../../../types/generalTypes";
 import CustomButton from "../../../core/components/CustomButton";
+import {
+  workingCapitalIndicatorsDataColumns,
+  getMappedWorrkingCapitalEditableRows,
+  setIndicatorsObjKeyValue,
+  workingCapitalDataColumns,
+  getMappedWorkingCapitalRows,
+} from "../Categories/FunctionsAndConstants";
 
 type WorkingCapitalProps = {
   Is_CRNT_Data: Is_CRNT_ResponseType;
@@ -28,7 +29,7 @@ type WorkingCapitalProps = {
   ) => void;
 };
 
-const WorkingCapital = ({
+const WorkingCapitalLayout = ({
   Is_CRNT_Data,
   setWorkingCapitalData,
 }: WorkingCapitalProps) => {
@@ -72,6 +73,53 @@ const WorkingCapital = ({
 
   return (
     <div>
+      <p className="text-3xl font-normal text-start mb-4">
+        Working Capital Key Indicators
+      </p>
+      {isIndicatorsPending ? (
+        <LoadingDataGrid columns={workingCapitalIndicatorsDataColumns} />
+      ) : workingCapitalIndicatorsData &&
+        workingCapitalIndicatorsData.data.length > 0 ? (
+        <DataGrid
+          columns={workingCapitalIndicatorsDataColumns}
+          rows={getMappedWorrkingCapitalEditableRows({
+            toggleValue: "Absolute",
+            workingCapitalIndicatorsData: workingCapitalIndicatorsData.data,
+            onEditClick: (
+              selectedIndex: number,
+              selectedKey: keyof WorkingCapitalIndicatorsResponseType
+            ) => {
+              setSelectedKeyIndex({ index: selectedIndex, key: selectedKey });
+            },
+            onTextChange: (
+              e: React.ChangeEvent<HTMLInputElement>,
+              index: number,
+              keyName: keyof WorkingCapitalIndicatorsResponseType
+            ) => {
+              const updatedAssumptionData = workingCapitalIndicatorsData.data;
+              const finalUpdatedAssumptionData = setIndicatorsObjKeyValue({
+                index: index,
+                key: keyName,
+                obj: updatedAssumptionData,
+                value: Number(e.target.value),
+              });
+              setUpdatedIndicators(finalUpdatedAssumptionData);
+            },
+            onSaveClick: () => {
+              setSelectedKeyIndex(null);
+              if (updatedIndicatorsData) {
+                postWorkingCapital({
+                  is_crntData: Is_CRNT_Data,
+                  key_indicators_df: updatedIndicatorsData,
+                });
+              }
+            },
+            selectedKeyIndex: selectedKeyIndex,
+          })}
+        />
+      ) : (
+        <>No Record Found!</>
+      )}
       <div className="flex justify-between my-4">
         <p className="text-3xl font-normal text-start mb-4">
           Working Capital Actual Data
@@ -109,76 +157,8 @@ const WorkingCapital = ({
       ) : (
         <>No Record Found!</>
       )}
-      <div className="flex justify-between py-4">
-        <p className="text-3xl font-normal text-start mb-4">
-          Working Capital Key Indicators
-        </p>
-        <div className="flex gap-3">
-          <CustomButton
-            width="w-28"
-            text={"Absolute"}
-            onClick={() => {
-              setToggle("Absolute");
-            }}
-          />
-          <CustomButton
-            width="w-28"
-            text={"Millions"}
-            onClick={() => setToggle("Millions")}
-          />
-          <CustomButton
-            width="w-28"
-            text={"Thousands"}
-            onClick={() => setToggle("Thousands")}
-          />
-        </div>
-      </div>
-      {isIndicatorsPending ? (
-        <LoadingDataGrid columns={workingCapitalIndicatorsDataColumns} />
-      ) : workingCapitalIndicatorsData &&
-        workingCapitalIndicatorsData.data.length > 0 ? (
-        <DataGrid
-          columns={workingCapitalIndicatorsDataColumns}
-          rows={getMappedWorrkingCapitalEditableRows({
-            toggleValue: expensesToggle,
-            workingCapitalIndicatorsData: workingCapitalIndicatorsData.data,
-            onEditClick: (
-              selectedIndex: number,
-              selectedKey: keyof WorkingCapitalIndicatorsResponseType
-            ) => {
-              setSelectedKeyIndex({ index: selectedIndex, key: selectedKey });
-            },
-            onTextChange: (
-              e: React.ChangeEvent<HTMLInputElement>,
-              index: number,
-              keyName: keyof WorkingCapitalIndicatorsResponseType
-            ) => {
-              const updatedAssumptionData = workingCapitalIndicatorsData.data;
-              const finalUpdatedAssumptionData = setIndicatorsObjKeyValue({
-                index: index,
-                key: keyName,
-                obj: updatedAssumptionData,
-                value: Number(e.target.value),
-              });
-              setUpdatedIndicators(finalUpdatedAssumptionData);
-            },
-            onSaveClick: () => {
-              setSelectedKeyIndex(null);
-              if (updatedIndicatorsData) {
-                postWorkingCapital({
-                  is_crntData: Is_CRNT_Data,
-                  key_indicators_df: updatedIndicatorsData,
-                });
-              }
-            },
-            selectedKeyIndex: selectedKeyIndex,
-          })}
-        />
-      ) : (
-        <>No Record Found!</>
-      )}
     </div>
   );
 };
 
-export default WorkingCapital;
+export default WorkingCapitalLayout;
